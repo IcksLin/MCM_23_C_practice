@@ -1,0 +1,110 @@
+=== solve scenario=1 stage=primary eta=0.25 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-25991286.0 dual_bound=-41165421.2503533 mip_gap=0.5838162548152984 nodes=0 time=30.2s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=1 stage=primary eta=0.5 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-25794528.5 dual_bound=-41150260.70560041 mip_gap=0.595309668312038 nodes=0 time=30.1s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=1 stage=primary eta=0.75 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-34332784.0 dual_bound=-40610753.436276026 mip_gap=0.18285640442895706 nodes=0 time=30.3s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=1 stage=primary eta=1.0 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-34652057.75 dual_bound=-40554174.35 mip_gap=0.17032514035908883 nodes=2 time=30.1s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=1 stage=primary eta=0.25 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-25991286.0 dual_bound=-41165421.2503533 mip_gap=0.5838162548152984 nodes=0 time=30.1s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=1 stage=primary eta=0.5 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-25794528.5 dual_bound=-41150149.21803508 mip_gap=0.5953053461719635 nodes=0 time=30.1s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=1 stage=primary eta=0.75 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-34332784.0 dual_bound=-40610753.436276026 mip_gap=0.18285640442895706 nodes=0 time=30.1s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=1 stage=primary eta=1.0 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-34652057.75 dual_bound=-40554174.35 mip_gap=0.17032514035908883 nodes=2 time=30.1s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=1 stage=primary eta=0.25 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-25991286.0 dual_bound=-41165421.2503533 mip_gap=0.5838162548152984 nodes=0 time=30.1s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=1 stage=primary eta=0.5 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-25794528.5 dual_bound=-41150260.70560041 mip_gap=0.595309668312038 nodes=0 time=30.1s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=1 stage=primary eta=0.75 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-34332784.0 dual_bound=-40610753.436276026 mip_gap=0.18285640442895706 nodes=0 time=30.2s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=1 stage=primary eta=1.0 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-34652057.75 dual_bound=-40554174.35 mip_gap=0.17032514035908883 nodes=2 time=30.1s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=1 stage=primary eta=0.25 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-25991286.0 dual_bound=-41163334.02442097 mip_gap=0.5837359499803499 nodes=0 time=120.1s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=1 stage=primary eta=0.5 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-25794528.5 dual_bound=-41147419.10075545 mip_gap=0.5951995052266783 nodes=0 time=120.1s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=1 stage=primary eta=0.25 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-25431785.25 dual_bound=-41162653.606242865 mip_gap=0.6185514780659319 nodes=0 time=120.1s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=1 stage=primary eta=0.5 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-34229493.25 dual_bound=-41154253.67889034 mip_gap=0.2023039131287852 nodes=0 time=120.1s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=1 stage=primary eta=0.75 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-39628357.75 dual_bound=-40539373.73386098 mip_gap=0.022988991610710312 nodes=2 time=120.2s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=1 stage=primary eta=1.0 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-39674427.75 dual_bound=-40554196.7 mip_gap=0.022174710509844795 nodes=1049 time=120.1s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=1 stage=primary eta=0.25 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-25431785.25 dual_bound=-41162962.39880772 mip_gap=0.6185636200591824 nodes=0 time=120.1s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=1 stage=primary eta=0.5 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-34229493.25 dual_bound=-41154433.64842717 mip_gap=0.20230917086180275 nodes=0 time=120.1s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=1 stage=primary eta=0.75 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-39628357.75 dual_bound=-40539373.73386098 mip_gap=0.022988991610710312 nodes=2 time=120.1s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=1 stage=primary eta=1.0 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-39293222.25 dual_bound=-40555327.25 mip_gap=0.0321201705467156 nodes=985 time=120.6s
+n_vars=15750 n_ub=19503 n_eq=1099
+

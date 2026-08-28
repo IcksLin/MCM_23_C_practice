@@ -1,0 +1,5 @@
+=== solve scenario=2 stage=primary eta=0.5 delta=0.0 scale=1.0 ===
+status=0 message=Optimization terminated successfully. (HiGHS Status 7: Optimal)
+fun=-63523397.8125 dual_bound=-63924424.56242608 mip_gap=0.006313055720189602 nodes=1 time=55.4s
+n_vars=15750 n_ub=19503 n_eq=1099
+

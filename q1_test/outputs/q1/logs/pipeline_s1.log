@@ -1,0 +1,5 @@
+=== solve scenario=1 stage=primary eta=0.5 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-25794528.5 dual_bound=-41147551.34521598 mip_gap=0.5952046320682304 nodes=0 time=90.1s
+n_vars=15750 n_ub=19503 n_eq=1099
+

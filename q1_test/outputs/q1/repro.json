@@ -1,0 +1,202 @@
+{
+  "inputs": {
+    "附件1.xlsx": {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\C题\\附件1.xlsx",
+      "sha256": "5E98BF5E1B247624397E57E74759DA293BD72005DAA0E2DF3710A0DAC0E9EF6A"
+    },
+    "附件2.xlsx": {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\C题\\附件2.xlsx",
+      "sha256": "869081A3AB47D3BF8D0955106B622AAF0FD2C068FADA7948DA69B20EBF1D00CE"
+    },
+    "result1_1.xlsx (template)": {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\C题\\附件3\\result1_1.xlsx",
+      "sha256": "4F2484C0D70A5C4D047163F2EE6EF486949E813330466F46DEF4BD7D98AF06AF"
+    },
+    "result1_2.xlsx (template)": {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\C题\\附件3\\result1_2.xlsx",
+      "sha256": "6166D43F5A64BF9D1657E80D4AEE7F10F54BB1A5695B81A28A0AC5E657297649"
+    }
+  },
+  "versions": {
+    "python": "3.13.5",
+    "pandas": "2.2.3",
+    "scipy": "1.15.3",
+    "matplotlib": "3.10.0",
+    "openpyxl": "3.1.5",
+    "solver": "HiGHS via scipy.optimize.milp"
+  },
+  "parameters": {
+    "seed": 2024,
+    "eta": 0.5,
+    "delta": 0.0,
+    "lambda": 1.0,
+    "mip_gap": 0.001,
+    "time_limit": 600.0,
+    "scenario": "both"
+  },
+  "timestamps": {
+    "start": "2026-08-27T23:18:27.152701",
+    "end": "2026-08-28T00:21:28.477647",
+    "duration_seconds": 3781.32
+  },
+  "solves": {
+    "scenario_1": {
+      "scenario": 1,
+      "Z": 38838192.500000015,
+      "primary_Z": 38838192.500000015,
+      "status": 1,
+      "profit_upper_bound": 41151153.97515569,
+      "mip_gap": 0.05955378781223336,
+      "node_count": 2,
+      "time": 600.0923726558685,
+      "primary_certified": false,
+      "lex_feasible": false,
+      "lex_certified": false,
+      "certified": false,
+      "error": null
+    },
+    "scenario_2": {
+      "scenario": 2,
+      "Z": 63778880.31249997,
+      "primary_Z": 63778880.3125,
+      "status": 1,
+      "profit_upper_bound": 63924530.527249984,
+      "mip_gap": 0.0022836746903729904,
+      "node_count": 2045,
+      "time": 600.1122303009033,
+      "primary_certified": false,
+      "lex_feasible": false,
+      "lex_certified": false,
+      "certified": false,
+      "error": null
+    }
+  },
+  "outputs": [
+    {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\q1_test\\outputs\\data_cleaning\\plots.csv",
+      "sha256": "401B3374CFC229BA391AB2E8F0BD722A1E3BBC41DADAE316536DA58305FA3D4C"
+    },
+    {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\q1_test\\outputs\\data_cleaning\\crops.csv",
+      "sha256": "5469C8F43A21F639A6E2CA2B90A57BCDF9D49C61EBD5212D002CE2C62046CD85"
+    },
+    {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\q1_test\\outputs\\data_cleaning\\planting_2023.csv",
+      "sha256": "34FF703EB8D859BA367F61428B048C6CA2CB65FA43183DFE8F6D117BA400A7CD"
+    },
+    {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\q1_test\\outputs\\data_cleaning\\stats_2023.csv",
+      "sha256": "A8C7730C37823B8D869F0F056A20F51F4C4CBF755462F2C7645BE86FFC3195F7"
+    },
+    {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\q1_test\\outputs\\data_cleaning\\data_assertions.txt",
+      "sha256": "9EE76B15168978CD58E05244C31903FC478042889FECFC50512D3860B60643BF"
+    },
+    {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\q1_test\\outputs\\q123_outputs\\q1\\result1_1.xlsx",
+      "sha256": "FD03A170208525E75BA2F3FA7EE4604FF862284C69698B2704075B341B23E437"
+    },
+    {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\q1_test\\outputs\\q123_outputs\\q1\\result1_2.xlsx",
+      "sha256": "7CF0DAA903A2C01520978C069E4C066888CA555E86684E02CE3E99DC6541CDD7"
+    },
+    {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\q1_test\\outputs\\q123_outputs\\q1\\yearly_stats.csv",
+      "sha256": "63C20454DFCBB6720B55120194B4AEE0120667E084D4306C9A94DD052000B7DD"
+    },
+    {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\q1_test\\outputs\\q123_outputs\\q1\\audit.csv",
+      "sha256": "ADC0377D331223150DFBAC428D0402C5D2526C647912C3BBCBC6999B4EC248EA"
+    },
+    {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\q1_test\\outputs\\q123_outputs\\q1\\sensitivity_eta.csv",
+      "sha256": "E54563299AE255390E26EC7816423E0946F02B9A899104E48DB4CB84903D2620"
+    },
+    {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\q1_test\\outputs\\q123_outputs\\q1\\sensitivity_delta.csv",
+      "sha256": "606C1763966BB21BFAE9BB5065C7BBB494A03728CC805ACA2F938BAF4C96FC48"
+    },
+    {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\q1_test\\outputs\\q123_outputs\\q1\\sensitivity_demand.csv",
+      "sha256": "A433090717CA9B53749DB66C0887988F21678B38F90595AE954E7DC80ED48AD4"
+    },
+    {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\q1_test\\outputs\\q123_outputs\\q1\\figures\\raw_q1_plot_area_by_type.png",
+      "sha256": "51CB9FF23CB4AC5BEAE86DCDE84B2918F835E7B53A2BC147264AAA3771138EA3"
+    },
+    {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\q1_test\\outputs\\q123_outputs\\q1\\figures\\raw_q1_plot_area_by_type.svg",
+      "sha256": "43C7B219AC11F08DA760DB20826FFC3983E6661BB8B970AEAA8AC057DA67D166"
+    },
+    {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\q1_test\\outputs\\q123_outputs\\q1\\figures\\raw_q1_crop_yield_proxy_2023.png",
+      "sha256": "3EDC24E8880B2A13FB80E6EF9EFBEA8219D0FCA3B2902D9314BB33E1D82A7EDB"
+    },
+    {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\q1_test\\outputs\\q123_outputs\\q1\\figures\\raw_q1_crop_yield_proxy_2023.svg",
+      "sha256": "4B3C111058056030868CE443A277904CACA479508F7495439E5B58F6F3C42A5B"
+    },
+    {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\q1_test\\outputs\\q123_outputs\\q1\\figures\\raw_q1_profit_heatmap.png",
+      "sha256": "C90B17802658ED47D1ED5436A3260A9FCEAFD5346B31D448CFE907E3180EB176"
+    },
+    {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\q1_test\\outputs\\q123_outputs\\q1\\figures\\raw_q1_profit_heatmap.svg",
+      "sha256": "941DE0B2B6F8AB13342FEC35D55F1D6A2306AC14955CE63AE7DD921AA0608D96"
+    },
+    {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\q1_test\\outputs\\q123_outputs\\q1\\figures\\process_q1_flowchart.png",
+      "sha256": "E5EA557C4DD37B2286D308D90AEE2FF17A7A5833F16AE28C6E9B2E8FF29C915E"
+    },
+    {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\q1_test\\outputs\\q123_outputs\\q1\\figures\\process_q1_flowchart.svg",
+      "sha256": "F28F4B212B3FDC05A8080EAD9B437F23C02DD74F42B27F103E1A59DCFD30009C"
+    },
+    {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\q1_test\\outputs\\q123_outputs\\q1\\figures\\process_q1_bound_convergence.png",
+      "sha256": "1EE472F0AD4FD9B7172FB1AF4C9CF50185FF98B0F6A8493E0DF601E4BBDD04AC"
+    },
+    {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\q1_test\\outputs\\q123_outputs\\q1\\figures\\process_q1_bound_convergence.svg",
+      "sha256": "40E5DECA34B1DE793BA766A13396AB77D3B39BD3EF0A62B5109617FAEB1FF01C"
+    },
+    {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\q1_test\\outputs\\q123_outputs\\q1\\figures\\process_q1_constraint_slack.png",
+      "sha256": "D8FEC5E424BC855E5DFFBF46AD2A4467C7EFF99D0350CE665F0FE0B9389E3DE3"
+    },
+    {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\q1_test\\outputs\\q123_outputs\\q1\\figures\\process_q1_constraint_slack.svg",
+      "sha256": "8B4579241EB2841438D2A39E3EDBDE765CC9843D67CABDB1591EB07C9C61E507"
+    },
+    {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\q1_test\\outputs\\q123_outputs\\q1\\figures\\result_q1_area_heatmap.png",
+      "sha256": "E2BB67DBD6F973211186DB38357D38A2444AE87F1344E8C0181A7FF38DDC1926"
+    },
+    {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\q1_test\\outputs\\q123_outputs\\q1\\figures\\result_q1_area_heatmap.svg",
+      "sha256": "A1E76B68A5D24EC7C59EB18C7AFEFF2D8AD911A40B1269D5160DD528F3266058"
+    },
+    {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\q1_test\\outputs\\q123_outputs\\q1\\figures\\result_q1_profit_breakdown.png",
+      "sha256": "83D7C504C3BA7E9A28DFD3DC4641322FC41DD47A9B8D5749DFDE8E96E786444C"
+    },
+    {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\q1_test\\outputs\\q123_outputs\\q1\\figures\\result_q1_profit_breakdown.svg",
+      "sha256": "EC4E4836666942F22B572325359C7C9EBBB1A9074AEE671FDF0046C79A012B7C"
+    },
+    {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\q1_test\\outputs\\q123_outputs\\q1\\figures\\result_q1_production_vs_sales.png",
+      "sha256": "2B7D4527252F33B5E35B49D28874E6443C94ADBD6DFC986F663F82D2A15E996F"
+    },
+    {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\q1_test\\outputs\\q123_outputs\\q1\\figures\\result_q1_production_vs_sales.svg",
+      "sha256": "C4C763D1EB08AE8DA765B6C03E9B5B3D69DC3ABA3BF0B41D19A10A2DE0334241"
+    },
+    {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\q1_test\\q123\\q1\\doc\\Q1_建模实现报告.md",
+      "sha256": "F135051D31F803AB64929E1FA99A008AAE6326DBDF9A8935CA9A54A14FF90CE2"
+    }
+  ],
+  "git_commit": "none",
+  "reproduction_command": "python \"D:\\时光归墟\\赛事\\数模\\practice_1\\q1_test\\scripts\\run_q1.py\" --scenario both --eta 0.5 --delta 0.0 --demand-scale 1.0 --mip-gap 0.001 --time-limit 600.0 --seed 2024 --sensitivity --figures --reports"
+}

@@ -1,0 +1,37 @@
+{
+  "seed": 2024,
+  "raw_scenarios": 500,
+  "reduced_scenarios": 20,
+  "beta": 0.9,
+  "lambda_grid": "0:1:0.2",
+  "out_sample": 2000,
+  "mip_gap": 0.05,
+  "time_limit": 120.0,
+  "distribution": "uniform",
+  "selected_lambda": "0.0",
+  "frontier_complete": false,
+  "selected_certified": false,
+  "f1_sha": "5E98BF5E1B247624397E57E74759DA293BD72005DAA0E2DF3710A0DAC0E9EF6A",
+  "f2_sha": "869081A3AB47D3BF8D0955106B622AAF0FD2C068FADA7948DA69B20EBF1D00CE",
+  "template2_sha": "6A1BA9FC28D14D0A4A795E5F0B7261FB6E32165517AFEE62BCD1931ABA5BEE8A",
+  "elapsed_seconds": 1200.9272062778473,
+  "versions": {
+    "python": "3.13.5",
+    "numpy": "2.1.3",
+    "pandas": "2.2.3",
+    "scipy": "1.15.3",
+    "openpyxl": "3.1.5",
+    "matplotlib": "3.10.0",
+    "solver": "HiGHS via scipy.optimize.milp"
+  },
+  "command": "python scripts/run_q2.py --seed 2024 --raw-scenarios 500 --reduced-scenarios 20 --beta 0.90 --lambda-grid 0:1:0.2 --out-sample 2000 --mip-gap 0.05 --time-limit 120 --eta 0.5 --figures --reports --allow-uncertified",
+  "output_sha256": {
+    "outputs\\q2\\result2.xlsx": "b7c694319e0b445fa48aefb43cd7372fb65e5d8195653f8caa3b5d066a061335",
+    "outputs\\q2\\scenario_summary.csv": "51d5213a92086e8518af40a25074c29ff6159b793e0fa4102dd4b799120a1fe4",
+    "outputs\\q2\\risk_frontier.csv": "bba3806e6a196e6314dfcdca68dcd1ae919dbdd127b2eda30c4bfe53de03a064",
+    "outputs\\q2\\out_of_sample_profits.csv": "5ff2d61748000c44b779b1b72bfe2cfc0672bd117e686a849df942cacf4438c3",
+    "outputs\\q2\\out_of_sample_metrics.csv": "f184f2e18dd94e2e2b46e1fd78b936b95699c61852358a2cc9bcfb624634c55a",
+    "outputs\\q2\\audit_q2.csv": "3b2c29a271841201474d3a7d218d57f5eeeff656628518c87b595fab9c9998d0",
+    "outputs\\q2\\selected_plan.csv": "83bd22febaaf09658ce4bb0f875ab3269359f7bbc874a15e4fecd844059486b6"
+  }
+}

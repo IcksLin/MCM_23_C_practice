@@ -1,0 +1,5 @@
+param,value,Z,incumbent_Z,certified,gap,time,status
+delta,0.0,,,False,,120.2443459033966,1
+delta,0.005,,,False,,120.11363530158997,1
+delta,0.01,,,False,,120.15436291694641,1
+delta,0.02,,,False,,120.27967476844788,1

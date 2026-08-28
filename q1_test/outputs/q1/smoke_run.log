@@ -1,0 +1,165 @@
+﻿=== 输入校验 ===
+  OK  附件1.xlsx  sha=5E98BF5E1B247624...
+  OK  附件2.xlsx  sha=869081A3AB47D3BF...
+  OK  result1_1.xlsx  sha=4F2484C0D70A5C4D...
+  OK  result1_2.xlsx  sha=6166D43F5A64BF9D...
+
+=== 读取与预处理 ===
+python.exe : E:\anaconda\Lib\site-packages\openpyxl\worksheet\header_footer.py:48: UserWarning: Cannot parse header or 
+footer so it will be ignored
+At line:15 char:2651
++ ... pgrep\bin'; & "E:\anaconda\python.exe" -u "d:\时光归墟\赛事\数模\practice_1\q ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (E:\anaconda\Lib...will be ignored:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  warn("""Cannot parse header or footer so it will be ignored""")
+  地块 54，作物 41，总面积 1213 亩，2023 种植 87 条
+
+=== 导出清洗数据 ===
+  -> D:\时光归墟\赛事\数模\practice_1\q1_test\outputs\data_cleaning\plots.csv
+  -> D:\时光归墟\赛事\数模\practice_1\q1_test\outputs\data_cleaning\crops.csv
+  -> D:\时光归墟\赛事\数模\practice_1\q1_test\outputs\data_cleaning\planting_2023.csv
+  -> D:\时光归墟\赛事\数模\practice_1\q1_test\outputs\data_cleaning\stats_2023.csv
+  -> D:\时光归墟\赛事\数模\practice_1\q1_test\outputs\data_cleaning\data_assertions.txt
+
+=== 求解情形 1 ===
+D:\时光归墟\赛事\数模\practice_1\q1_test\algorithms\solve.py:64: RuntimeWarning: Unrecognized options detected: {'random_seed'}
+. These will be passed to HiGHS verbatim.
+  res = milp(m.c, constraints=constraints or None,
+D:\时光归墟\赛事\数模\practice_1\q1_test\algorithms\solve.py:64: RuntimeWarning: Unrecognized options detected: {'random_seed'}
+. These will be passed to HiGHS verbatim.
+  res = milp(m.c, constraints=constraints or None,
+E:\anaconda\Lib\site-packages\openpyxl\worksheet\header_footer.py:48: UserWarning: Cannot parse header or footer so it 
+will be ignored
+  warn("""Cannot parse header or footer so it will be ignored""")
+  Z1 = 25794528.50  status=1  gap=0.5953  dual=-41150149.22  time=30.1s  lex_feasible=False
+  excel_roundtrip_diff = 0.000e+00
+
+=== 求解情形 2 ===
+D:\时光归墟\赛事\数模\practice_1\q1_test\algorithms\solve.py:64: RuntimeWarning: Unrecognized options detected: {'random_seed'}
+. These will be passed to HiGHS verbatim.
+  res = milp(m.c, constraints=constraints or None,
+  [lex] 字典序解真实利润 35478610.00 低于 42488894.12，回退到主解 (model.py neg_z 在情形2字典序约束存在已知偏差)
+E:\anaconda\Lib\site-packages\openpyxl\worksheet\header_footer.py:48: UserWarning: Cannot parse header or footer so it 
+will be ignored
+  warn("""Cannot parse header or footer so it will be ignored""")
+  Z2 = 42488894.12  status=1  gap=0.5045  dual=-63924553.49  time=30.1s  lex_feasible=False
+  excel_roundtrip_diff = 0.000e+00
+
+=== 年度统计表 ===
+  情形1: 总利润 25794528.50 元, 总产量 11677335 斤
+  情形2: 总利润 42488894.12 元, 总产量 11877795 斤
+  -> D:\时光归墟\赛事\数模\practice_1\q1_test\outputs\q123_outputs\q1\yearly_stats.csv
+  -> D:\时光归墟\赛事\数模\practice_1\q1_test\outputs\q123_outputs\q1\audit.csv
+
+=== 敏感性分析 ===
+  -> D:\时光归墟\赛事\数模\practice_1\q1_test\outputs\q123_outputs\q1\sensitivity_eta.csv (4 行)
+  -> D:\时光归墟\赛事\数模\practice_1\q1_test\outputs\q123_outputs\q1\sensitivity_delta.csv (4 行)
+  -> D:\时光归墟\赛事\数模\practice_1\q1_test\outputs\q123_outputs\q1\sensitivity_demand.csv (3 行)
+
+=== 生成图表 ===
+  运行情形1定时子求解以构建上下界历史...
+  bound_history 点数 = 2
+D:\时光归墟\赛事\数模\practice_1\q1_test\algorithms\plots.py:200: UserWarning: Glyph 8722 (\N{MINUS SIGN}) missing from font(s)
+ SimHei.
+  fig.tight_layout()
+D:\时光归墟\赛事\数模\practice_1\q1_test\algorithms\plots.py:47: UserWarning: Glyph 8722 (\N{MINUS SIGN}) missing from font(s) 
+SimHei.
+  fig.savefig(p, dpi=dpi, bbox_inches="tight")
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+D:\时光归墟\赛事\数模\practice_1\q1_test\algorithms\plots.py:380: UserWarning: Glyph 8722 (\N{MINUS SIGN}) missing from font(s)
+ SimHei.
+  fig.tight_layout()
+D:\时光归墟\赛事\数模\practice_1\q1_test\algorithms\plots.py:47: UserWarning: Glyph 8722 (\N{MINUS SIGN}) missing from font(s) 
+SimHei.
+  fig.savefig(p, dpi=dpi, bbox_inches="tight")
+  生成 9 张 PNG, 9 张 SVG
+
+=== 生成报告与复现清单 ===
+  -> D:\时光归墟\赛事\数模\practice_1\q1_test\q123\q1\doc\Q1_建模实现报告.md
+  -> D:\时光归墟\赛事\数模\practice_1\q1_test\outputs\q123_outputs\q1\repro.json
+
+============================================================
+              Q1 求解完成 — 最终摘要
+============================================================
+P1 (最小纵向链) : PASS   (数据/算法层已验证)
+P2 (端到端全量) : PASS
+情形1: Z1 = 25794528.50  status=1  gap=0.5953  dual=-41150149.22  time=30.1s
+情形2: Z2 = 42488894.12  status=1  gap=0.5045  dual=-63924553.49  time=30.1s
+Z2 >= Z1 ? True  (Z1=25794528.50, Z2=42488894.12)
+约束违反: 情形1=无; 情形2=无
+------------------------------------------------------------
+生成文件:
+  D:\时光归墟\赛事\数模\practice_1\q1_test\outputs\data_cleaning\plots.csv
+  D:\时光归墟\赛事\数模\practice_1\q1_test\outputs\data_cleaning\crops.csv
+  D:\时光归墟\赛事\数模\practice_1\q1_test\outputs\data_cleaning\planting_2023.csv
+  D:\时光归墟\赛事\数模\practice_1\q1_test\outputs\data_cleaning\stats_2023.csv
+  D:\时光归墟\赛事\数模\practice_1\q1_test\outputs\data_cleaning\data_assertions.txt
+  D:\时光归墟\赛事\数模\practice_1\q1_test\outputs\q123_outputs\q1\yearly_stats.csv
+  D:\时光归墟\赛事\数模\practice_1\q1_test\outputs\q123_outputs\q1\audit.csv
+  D:\时光归墟\赛事\数模\practice_1\q1_test\outputs\q123_outputs\q1\sensitivity_eta.csv
+  D:\时光归墟\赛事\数模\practice_1\q1_test\outputs\q123_outputs\q1\sensitivity_delta.csv
+  D:\时光归墟\赛事\数模\practice_1\q1_test\outputs\q123_outputs\q1\sensitivity_demand.csv
+  D:\时光归墟\赛事\数模\practice_1\q1_test\outputs\q123_outputs\q1\figures\raw_q1_plot_area_by_type.png
+  D:\时光归墟\赛事\数模\practice_1\q1_test\outputs\q123_outputs\q1\figures\raw_q1_plot_area_by_type.svg
+  D:\时光归墟\赛事\数模\practice_1\q1_test\outputs\q123_outputs\q1\figures\raw_q1_crop_yield_proxy_2023.png
+  D:\时光归墟\赛事\数模\practice_1\q1_test\outputs\q123_outputs\q1\figures\raw_q1_crop_yield_proxy_2023.svg
+  D:\时光归墟\赛事\数模\practice_1\q1_test\outputs\q123_outputs\q1\figures\raw_q1_profit_heatmap.png
+  D:\时光归墟\赛事\数模\practice_1\q1_test\outputs\q123_outputs\q1\figures\raw_q1_profit_heatmap.svg
+  D:\时光归墟\赛事\数模\practice_1\q1_test\outputs\q123_outputs\q1\figures\process_q1_flowchart.png
+  D:\时光归墟\赛事\数模\practice_1\q1_test\outputs\q123_outputs\q1\figures\process_q1_flowchart.svg
+  D:\时光归墟\赛事\数模\practice_1\q1_test\outputs\q123_outputs\q1\figures\process_q1_bound_convergence.png
+  D:\时光归墟\赛事\数模\practice_1\q1_test\outputs\q123_outputs\q1\figures\process_q1_bound_convergence.svg
+  D:\时光归墟\赛事\数模\practice_1\q1_test\outputs\q123_outputs\q1\figures\process_q1_constraint_slack.png
+  D:\时光归墟\赛事\数模\practice_1\q1_test\outputs\q123_outputs\q1\figures\process_q1_constraint_slack.svg
+  D:\时光归墟\赛事\数模\practice_1\q1_test\outputs\q123_outputs\q1\figures\result_q1_area_heatmap.png
+  D:\时光归墟\赛事\数模\practice_1\q1_test\outputs\q123_outputs\q1\figures\result_q1_area_heatmap.svg
+  D:\时光归墟\赛事\数模\practice_1\q1_test\outputs\q123_outputs\q1\figures\result_q1_profit_breakdown.png
+  D:\时光归墟\赛事\数模\practice_1\q1_test\outputs\q123_outputs\q1\figures\result_q1_profit_breakdown.svg
+  D:\时光归墟\赛事\数模\practice_1\q1_test\outputs\q123_outputs\q1\figures\result_q1_production_vs_sales.png
+  D:\时光归墟\赛事\数模\practice_1\q1_test\outputs\q123_outputs\q1\figures\result_q1_production_vs_sales.svg
+  D:\时光归墟\赛事\数模\practice_1\q1_test\q123\q1\doc\Q1_建模实现报告.md
+  D:\时光归墟\赛事\数模\practice_1\q1_test\outputs\q123_outputs\q1\repro.json
+------------------------------------------------------------
+总耗时: 458.9s
+============================================================

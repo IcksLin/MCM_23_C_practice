@@ -1,0 +1,90 @@
+=== solve scenario=2 stage=primary eta=0.5 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-42488894.125 dual_bound=-63924553.49307548 mip_gap=0.5045002890640775 nodes=0 time=30.1s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=2 stage=lex eta=0.5 delta=0.0 scale=1.0 ===
+status=0 message=Optimization terminated successfully. (HiGHS Status 7: Optimal)
+fun=555.0 dual_bound=544.0 mip_gap=0.01981981981981982 nodes=1 time=2.2s
+n_vars=15750 n_ub=19504 n_eq=1099
+
+=== solve scenario=2 stage=primary eta=0.5 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-42488894.125 dual_bound=-63924553.49307548 mip_gap=0.5045002890640775 nodes=0 time=30.1s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=2 stage=lex eta=0.5 delta=0.0 scale=1.0 ===
+status=0 message=Optimization terminated successfully. (HiGHS Status 7: Optimal)
+fun=555.0 dual_bound=544.0 mip_gap=0.01981981981981982 nodes=1 time=2.3s
+n_vars=15750 n_ub=19504 n_eq=1099
+
+=== solve scenario=2 stage=primary eta=0.5 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-42488894.125 dual_bound=-63924553.49307548 mip_gap=0.5045002890640775 nodes=0 time=30.1s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=2 stage=lex eta=0.5 delta=0.0 scale=1.0 ===
+status=0 message=Optimization terminated successfully. (HiGHS Status 7: Optimal)
+fun=555.0 dual_bound=544.0 mip_gap=0.01981981981981982 nodes=1 time=2.3s
+n_vars=15750 n_ub=19504 n_eq=1099
+
+=== solve scenario=2 stage=primary eta=0.5 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-42488894.125 dual_bound=-63924553.49307548 mip_gap=0.5045002890640775 nodes=0 time=30.1s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=2 stage=lex eta=0.5 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=574.0 dual_bound=544.0000000000105 mip_gap=0.05226480836235112 nodes=0 time=30.1s
+n_vars=15750 n_ub=19504 n_eq=1099
+
+=== solve scenario=2 stage=primary eta=0.5 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-42488894.125 dual_bound=-63924613.97041311 mip_gap=0.504501712432204 nodes=0 time=20.1s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=2 stage=lex eta=0.5 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=574.0 dual_bound=544.0000000000105 mip_gap=0.05226480836235112 nodes=0 time=20.1s
+n_vars=15750 n_ub=19504 n_eq=1099
+
+=== solve scenario=2 stage=primary eta=0.5 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-63664355.0 dual_bound=-63924299.01057704 mip_gap=0.004083038469125116 nodes=665 time=300.1s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=2 stage=lex eta=0.5 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: model_status is Time limit reached; primal_status is None)
+fun=nan dual_bound=nan mip_gap=nan nodes=0 time=300.1s
+n_vars=15750 n_ub=19504 n_eq=1099
+
+=== solve scenario=2 stage=primary eta=0.5 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-63778880.3125 dual_bound=-63924530.527249984 mip_gap=0.0022836746903729904 nodes=2097 time=600.2s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=2 stage=lex eta=0.5 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: model_status is Time limit reached; primal_status is None)
+fun=nan dual_bound=nan mip_gap=nan nodes=0 time=600.0s
+n_vars=15750 n_ub=19504 n_eq=1099
+
+=== solve scenario=2 stage=primary eta=0.5 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-63778880.3125 dual_bound=-63924530.527249984 mip_gap=0.0022836746903729904 nodes=2045 time=600.1s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=2 stage=lex eta=0.5 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: model_status is Time limit reached; primal_status is None)
+fun=nan dual_bound=nan mip_gap=nan nodes=0 time=600.2s
+n_vars=15750 n_ub=19504 n_eq=1099
+
+=== solve scenario=2 stage=primary eta=0.5 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-42570196.625 dual_bound=-63924760.058704354 mip_gap=0.5016317782559538 nodes=0 time=20.1s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=2 stage=lex eta=0.5 delta=0.001 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: model_status is Time limit reached; primal_status is None)
+fun=nan dual_bound=nan mip_gap=nan nodes=0 time=20.3s
+n_vars=15750 n_ub=19504 n_eq=1099
+

@@ -1,0 +1,7 @@
+lambda,z_lambda,expected_profit,lower_tail_cvar,n_activations,status,mip_gap,dual_bound,solve_time,final_stage,lex_complete,certified,eligible
+0.0,22569940.69243253,22569940.69243253,22445322.628701553,574,1,0.052264808362365175,544.0000000000024,360.874288099998,3,True,False,True
+0.2,,,,0,infeasible,1.0,,,0,False,False,False
+0.4,,,,0,infeasible,1.0,,,0,False,False,False
+0.6,,,,0,infeasible,1.0,,,0,False,False,False
+0.8,,,,0,infeasible,1.0,,,0,False,False,False
+1.0,,,,0,infeasible,1.0,,,0,False,False,False

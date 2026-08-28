@@ -1,0 +1,75 @@
+=== solve scenario=1 stage=primary eta=0.5 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: model_status is Time limit reached; primal_status is None)
+fun=nan dual_bound=nan mip_gap=nan nodes=0 time=5.1s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=1 stage=primary eta=0.5 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-25794528.5 dual_bound=-41155289.343697116 mip_gap=0.5955046181091124 nodes=0 time=15.1s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=1 stage=primary eta=0.5 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-25794528.5 dual_bound=-41150149.21803508 mip_gap=0.5953053461719635 nodes=0 time=30.1s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=1 stage=primary eta=0.5 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: model_status is Time limit reached; primal_status is None)
+fun=nan dual_bound=nan mip_gap=nan nodes=0 time=5.1s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=1 stage=primary eta=0.5 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-25794528.5 dual_bound=-41155289.343697116 mip_gap=0.5955046181091124 nodes=0 time=15.1s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=1 stage=primary eta=0.5 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-25794528.5 dual_bound=-41150149.21803508 mip_gap=0.5953053461719635 nodes=0 time=30.1s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=1 stage=primary eta=0.5 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: model_status is Time limit reached; primal_status is None)
+fun=nan dual_bound=nan mip_gap=nan nodes=0 time=5.1s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=1 stage=primary eta=0.5 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-25794528.5 dual_bound=-41156299.898020834 mip_gap=0.5955437951897757 nodes=0 time=15.1s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=1 stage=primary eta=0.5 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-25794528.5 dual_bound=-41150260.70560041 mip_gap=0.595309668312038 nodes=0 time=30.1s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=1 stage=primary eta=0.5 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: model_status is Time limit reached; primal_status is None)
+fun=nan dual_bound=nan mip_gap=nan nodes=0 time=5.2s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=1 stage=primary eta=0.5 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-34229493.25 dual_bound=-41158357.025503635 mip_gap=0.20242379064445062 nodes=0 time=15.1s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=1 stage=primary eta=0.5 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-34229493.25 dual_bound=-41157367.24431341 mip_gap=0.20239487461046218 nodes=0 time=30.1s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=1 stage=primary eta=0.5 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: model_status is Time limit reached; primal_status is None)
+fun=nan dual_bound=nan mip_gap=nan nodes=0 time=5.2s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=1 stage=primary eta=0.5 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-34229493.25 dual_bound=-41159306.79977601 mip_gap=0.2024515378934513 nodes=0 time=15.2s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=1 stage=primary eta=0.5 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-34229493.25 dual_bound=-41157429.0797539 mip_gap=0.20239668110639933 nodes=0 time=30.2s
+n_vars=15750 n_ub=19503 n_eq=1099
+

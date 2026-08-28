@@ -1,0 +1,6 @@
+numpy>=2.0
+pandas>=2.2
+scipy>=1.15
+openpyxl>=3.1
+matplotlib>=3.10
+Pillow>=10.0

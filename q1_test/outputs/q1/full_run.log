@@ -1,0 +1,21 @@
+﻿E:\anaconda\python.exe : E:\anaconda\Lib\site-packages\openpyxl\worksheet\header_footer.py:48: UserWarning: Cannot pars
+e header or footer so it will be ignored
+At line:15 char:2690
++ ... 1/q1_test"; E:\anaconda\python.exe scripts/run_q1.py --scenario both  ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (E:\anaconda\Lib...will be ignored:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  warn("""Cannot parse header or footer so it will be ignored""")
+D:\时光归墟\赛事\数模\practice_1\q1_test\algorithms\solve.py:64: RuntimeWarning: Unrecognized options detected: {'random_seed'}
+. These will be passed to HiGHS verbatim.
+  res = milp(m.c, constraints=constraints or None,
+E:\anaconda\Lib\site-packages\openpyxl\worksheet\header_footer.py:48: UserWarning: Cannot parse header or footer so it 
+will be ignored
+  warn("""Cannot parse header or footer so it will be ignored""")
+D:\时光归墟\赛事\数模\practice_1\q1_test\algorithms\solve.py:64: RuntimeWarning: Unrecognized options detected: {'random_seed'}
+. These will be passed to HiGHS verbatim.
+  res = milp(m.c, constraints=constraints or None,
+E:\anaconda\Lib\site-packages\openpyxl\worksheet\header_footer.py:48: UserWarning: Cannot parse header or footer so it 
+will be ignored
+  warn("""Cannot parse header or footer so it will be ignored""")

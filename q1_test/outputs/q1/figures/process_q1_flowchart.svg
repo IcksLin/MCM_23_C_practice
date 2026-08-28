@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="864pt" height="230.4pt" viewBox="0 0 864 230.4" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-08-28T00:21:22.536000</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.0, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 230.4 
+L 864 230.4 
+L 864 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 26.244 165.65415 
+L 135.756 165.65415 
+Q 146.988 165.65415 146.988 150.24105 
+L 146.988 96.2952 
+Q 146.988 80.8821 135.756 80.8821 
+L 26.244 80.8821 
+Q 15.012 80.8821 15.012 96.2952 
+L 15.012 150.24105 
+Q 15.012 165.65415 26.244 165.65415 
+z
+" clip-path="url(#pefa8a64663)" style="fill: #9ec5fe; stroke: #333333; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 166.644 165.65415 
+L 276.156 165.65415 
+Q 287.388 165.65415 287.388 150.24105 
+L 287.388 96.2952 
+Q 287.388 80.8821 276.156 80.8821 
+L 166.644 80.8821 
+Q 155.412 80.8821 155.412 96.2952 
+L 155.412 150.24105 
+Q 155.412 165.65415 166.644 165.65415 
+z
+" clip-path="url(#pefa8a64663)" style="fill: #9ec5fe; stroke: #333333; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 307.044 165.65415 
+L 416.556 165.65415 
+Q 427.788 165.65415 427.788 150.24105 
+L 427.788 96.2952 
+Q 427.788 80.8821 416.556 80.8821 
+L 307.044 80.8821 
+Q 295.812 80.8821 295.812 96.2952 
+L 295.812 150.24105 
+Q 295.812 165.65415 307.044 165.65415 
+z
+" clip-path="url(#pefa8a64663)" style="fill: #9ec5fe; stroke: #333333; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 447.444 165.65415 
+L 556.956 165.65415 
+Q 568.188 165.65415 568.188 150.24105 
+L 568.188 96.2952 
+Q 568.188 80.8821 556.956 80.8821 
+L 447.444 80.8821 
+Q 436.212 80.8821 436.212 96.2952 
+L 436.212 150.24105 
+Q 436.212 165.65415 447.444 165.65415 
+z
+" clip-path="url(#pefa8a64663)" style="fill: #9ec5fe; stroke: #333333; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 587.844 165.65415 
+L 697.356 165.65415 
+Q 708.588 165.65415 708.588 150.24105 
+L 708.588 96.2952 
+Q 708.588 80.8821 697.356 80.8821 
+L 587.844 80.8821 
+Q 576.612 80.8821 576.612 96.2952 
+L 576.612 150.24105 
+Q 576.612 165.65415 587.844 165.65415 
+z
+" clip-path="url(#pefa8a64663)" style="fill: #9ec5fe; stroke: #333333; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 728.244 165.65415 
+L 837.756 165.65415 
+Q 848.988 165.65415 848.988 150.24105 
+L 848.988 96.2952 
+Q 848.988 80.8821 837.756 80.8821 
+L 728.244 80.8821 
+Q 717.012 80.8821 717.012 96.2952 
+L 717.012 150.24105 
+Q 717.012 165.65415 728.244 165.65415 
+z
+" clip-path="url(#pefa8a64663)" style="fill: #9ec5fe; stroke: #333333; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_1">
+    <text style="font-size: 10px; font-family: 'SimHei', 'Microsoft YaHei', 'DejaVu Sans', sans-serif; text-anchor: middle" x="81" y="126.588438" transform="rotate(-0 81 126.588438)">读取 Excel</text>
+   </g>
+   <g id="patch_8">
+    <path d="M 146.181111 123.268125 
+Q 149.095175 123.268125 150.443991 123.268125 
+" style="fill: none; stroke: #333333; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 146.443991 121.268125 
+L 150.443991 123.268125 
+L 146.443991 125.268125 
+" style="fill: none; stroke: #333333; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 10px; font-family: 'SimHei', 'Microsoft YaHei', 'DejaVu Sans', sans-serif; text-anchor: middle" x="221.4" y="126.568906" transform="rotate(-0 221.4 126.568906)">数据清洗</text>
+   </g>
+   <g id="patch_9">
+    <path d="M 286.581111 123.268125 
+Q 289.495175 123.268125 290.843991 123.268125 
+" style="fill: none; stroke: #333333; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 286.843991 121.268125 
+L 290.843991 123.268125 
+L 286.843991 125.268125 
+" style="fill: none; stroke: #333333; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="text_3">
+    <text style="font-size: 10px; font-family: 'SimHei', 'Microsoft YaHei', 'DejaVu Sans', sans-serif; text-anchor: middle" x="361.8" y="126.607969" transform="rotate(-0 361.8 126.607969)">建立 MILP 模型</text>
+   </g>
+   <g id="patch_10">
+    <path d="M 426.981111 123.268125 
+Q 429.895175 123.268125 431.243991 123.268125 
+" style="fill: none; stroke: #333333; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 427.243991 121.268125 
+L 431.243991 123.268125 
+L 427.243991 125.268125 
+" style="fill: none; stroke: #333333; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 10px; font-family: 'SimHei', 'Microsoft YaHei', 'DejaVu Sans', sans-serif; text-anchor: middle" x="502.2" y="126.666563" transform="rotate(-0 502.2 126.666563)">求解 (HiGHS)</text>
+   </g>
+   <g id="patch_11">
+    <path d="M 567.381111 123.268125 
+Q 570.295175 123.268125 571.643991 123.268125 
+" style="fill: none; stroke: #333333; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 567.643991 121.268125 
+L 571.643991 123.268125 
+L 567.643991 125.268125 
+" style="fill: none; stroke: #333333; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="text_5">
+    <text style="font-size: 10px; font-family: 'SimHei', 'Microsoft YaHei', 'DejaVu Sans', sans-serif; text-anchor: middle" x="642.6" y="126.647031" transform="rotate(-0 642.6 126.647031)">约束校验</text>
+   </g>
+   <g id="patch_12">
+    <path d="M 707.781111 123.268125 
+Q 710.695175 123.268125 712.043991 123.268125 
+" style="fill: none; stroke: #333333; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 708.043991 121.268125 
+L 712.043991 123.268125 
+L 708.043991 125.268125 
+" style="fill: none; stroke: #333333; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 10px; font-family: 'SimHei', 'Microsoft YaHei', 'DejaVu Sans', sans-serif; text-anchor: middle" x="783" y="126.568906" transform="rotate(-0 783 126.568906)">导出结果</text>
+   </g>
+   <g id="text_7">
+    <text style="font-size: 12px; font-family: 'SimHei', 'Microsoft YaHei', 'DejaVu Sans', sans-serif; text-anchor: middle" x="432" y="20.93625" transform="rotate(-0 432 20.93625)">问题1 数据—建模—求解—校验流程图</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pefa8a64663">
+   <rect x="10.8" y="26.93625" width="842.4" height="192.66375"/>
+  </clipPath>
+ </defs>
+</svg>
