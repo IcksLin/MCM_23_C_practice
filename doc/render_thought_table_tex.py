@@ -114,11 +114,15 @@ def column_spec(count: int) -> str:
     return "@{}" + "".join(r">{\raggedright\arraybackslash}p{" + f"{w:.2f}" + r"\linewidth}" for w in selected) + "@{}"
 
 
-def render_table(rows: list[list[str]]) -> list[str]:
+def render_table(rows: list[list[str]], table_number: int) -> list[str]:
     header = rows[0]
     body = rows[2:]
     spec = column_spec(len(header))
-    output = [r"\begin{longtable}{" + spec + "}", r"\toprule"]
+    output = [
+        r"\begin{longtable}{" + spec + "}",
+        rf"\caption{{思路表第 {table_number} 表}}\label{{tab:thought-{table_number}}}\\",
+        r"\toprule",
+    ]
     output.append(" & ".join(r"\textbf{" + inline(cell) + "}" for cell in header) + r" \\")
     output.extend([r"\midrule", r"\endfirsthead", r"\toprule"])
     output.append(" & ".join(r"\textbf{" + inline(cell) + "}" for cell in header) + r" \\")
@@ -135,6 +139,7 @@ def convert(source: Path, target: Path) -> None:
     index = 0
     list_kind: str | None = None
     in_math = False
+    table_number = 0
 
     def close_list() -> None:
         nonlocal list_kind
@@ -173,11 +178,12 @@ def convert(source: Path, target: Path) -> None:
             continue
         if stripped.startswith("|") and index + 1 < len(lines) and re.match(r"^\|[\s:|-]+\|$", lines[index + 1].strip()):
             close_list()
+            table_number += 1
             table_lines: list[list[str]] = []
             while index < len(lines) and lines[index].strip().startswith("|"):
                 table_lines.append(split_table_row(lines[index]))
                 index += 1
-            body.extend(render_table(table_lines))
+            body.extend(render_table(table_lines, table_number))
             continue
         heading = re.match(r"^(#{1,4})\s+(.*)$", stripped)
         if heading:
@@ -189,6 +195,10 @@ def convert(source: Path, target: Path) -> None:
                 body.append(r"\author{}")
                 body.append(r"\date{}")
                 body.append(r"\maketitle")
+                body.append(r"\begin{abstract}")
+                body.append("本文将农作物种植策略问题一至问题三的数据处理、数学模型、求解流程、验证方法、现有结果及证据边界汇总为统一思路表，供后续工程实现与论文写作核对使用。")
+                body.append(r"\keywords{农作物种植；混合整数线性规划；情景分析；CVaR；t-Copula}")
+                body.append(r"\end{abstract}")
             else:
                 command = {2: "section", 3: "subsection", 4: "subsubsection"}[level]
                 body.append(rf"\{command}{{{title}}}")
@@ -224,6 +234,7 @@ def convert(source: Path, target: Path) -> None:
 \usepackage[a4paper,landscape,left=1.4cm,right=1.4cm,top=1.5cm,bottom=1.5cm]{geometry}
 \usepackage[hidelinks]{hyperref}
 \usepackage{fancyhdr}
+\newcommand{\keywords}[1]{\par\noindent\textbf{关键词：}#1}
 \setlength{\headheight}{14pt}
 \setlength{\parindent}{2em}
 \setlength{\parskip}{0.25em}
