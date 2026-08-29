@@ -119,9 +119,9 @@ def _without_sheet_data(xml_bytes: bytes) -> bytes:
     return ET.tostring(root, encoding="UTF-8")
 
 
-def patch_result2(plan: dict, data: ModelData,
-                  template_path: Path, output_path: Path) -> dict:
-    """Patch a candidate, audit it, then atomically publish it."""
+def export_result2_workbook(plan: dict, data: ModelData,
+                            template_path: Path, output_path: Path) -> dict:
+    """生成、审计并原子发布问题2结果工作簿。"""
     template_path = Path(template_path)
     output_path = Path(output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)

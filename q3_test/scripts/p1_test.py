@@ -29,7 +29,7 @@ from algorithms.scenario_reduction import reduce_scenarios
 from algorithms.solve import solve_lexicographic, extract_solution
 from algorithms.risk import recompute_scenario_profits, compute_cvar
 from algorithms.validate import validate_solution
-from algorithms.export_ooxml import patch_result3
+from algorithms.export_ooxml import export_result3_workbook
 
 import numpy as np
 
@@ -72,14 +72,21 @@ def main() -> int:
     _assert(len(plan_x_q2) > 0, "Q2方案非空")
 
     # ---- 4. LHS边际生成 ----
-    print("\n[4] LHS边际生成 (N=30)")
-    N = 30
+    print("\n[4] LHS边际生成与完整Kendall门禁 (N=2000)")
+    # 0.05 是正式统计门槛，N=30 的抽样误差不可能稳定满足；P1 使用
+    # 与正式实验一致的 N，MILP 仍只保留 K=3 以控制纵向测试耗时。
+    N = 2000
     dep_cfg = DependencyConfig(5, 1.0, 0.5, BASE_LOADINGS)
     ela_cfg = ElasticityConfig(scale=1.0)
     scenarios = generate_raw_scenarios(
         data, n=N, seed=2024, dependency_cfg=dep_cfg,
         elasticity_cfg=ela_cfg)
     _assert(scenarios.n == N, f"情景数={scenarios.n}")
+    _assert(scenarios.dependency_audit.pair_count > 0,
+            f"Kendall审计对={scenarios.dependency_audit.pair_count}")
+    _assert(scenarios.dependency_audit.max_kendall_error <= 0.05,
+            "原始Kendall最大误差="
+            f"{scenarios.dependency_audit.max_kendall_error:.4f}")
 
     # 验证LHS分层
     for (i, t, s), vals in scenarios.demand.items():
@@ -169,8 +176,8 @@ def main() -> int:
 
     # ---- 11. OOXML输出 ----
     print("\n[11] OOXML候选输出")
-    out_path = paths.Q3_OUT_DIR / "p1_test_candidate.xlsx"
-    diff = patch_result3(sol, data, paths.TEMPLATE2_PATH, out_path)
+    out_path = paths.Q3_OUT_DIR / "p1.xlsx"
+    diff = export_result3_workbook(sol, data, paths.TEMPLATE2_PATH, out_path)
     _assert(diff < 1e-6, f"回读差={diff:.2e}")
 
     # ---- 完成 ----

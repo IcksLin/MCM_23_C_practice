@@ -1,0 +1,6 @@
+benchmark_id,question,case,scope,objective_name,incumbent,objective_bound,corrected_gap,oos_mean_profit,oos_cvar,max_violation,feasible,certified,source,notes
+q1_case1_current,Q1,情形1,全整数主目标,七年利润,34229493.25,41156748.417404935,0.20237679584709992,,,0.0,true,false,q1_test/outputs/q1/audit.csv,滞销浪费口径；采用最新audit
+q1_case2_current,Q1,情形2,全整数主目标,七年利润,42570196.625,63924760.058704354,0.5016317782559538,,,0.0,true,false,q1_test/outputs/q1/audit.csv,超额产量半价销售口径；采用最新audit
+q2_current,Q2,风险中性lambda0,全整数Stage1,期望利润,24376595.135855984,49328440.81501144,1.0235984779700973,24377039.020479195,24172746.880972277,,true,false,q2_test/outputs/q2/risk_frontier.csv,上界由Stage1正向gap口径换算；不使用Stage3 dual_bound=544
+q3_integer_discovery,Q3,lambda0.5,全整数结构发现K3,均值-CVaR风险目标,32310872.795191847,42479817.450480565,0.314722066461849,32369673.152882006,31693920.029902294,5.820766091346741e-11,true,false,q3_test/outputs/q3/gap_summary_q3.csv,全整数gap；K3仅用于结构搜索
+q3_fixed_refine,Q3,lambda0.5,固定Q3新结构K30,均值-CVaR风险目标,32308752.0,32308752.0,0.0,32369673.152882006,31693920.029902294,8.73e-11,true,false,q3_test/outputs/q3/gap_summary_q3.csv,条件gap=0；不是全整数全局gap

@@ -1,0 +1,57 @@
+schema_version: 1
+problem: q3
+description: 问题3当前主候选的固定发现结构精炼镜像
+seed: 2024
+distribution: uniform
+raw_scenarios: 2000
+reduced_scenarios: 30
+out_sample: 5000
+beta: 0.90
+lambda_grid: [0.0, 0.5, 1.0]
+eta: 0.5
+allow_uncertified: true
+no_checkpoint: true
+figures: false
+reports: true
+dependency:
+  df: 5
+  correlation_scale: 1.0
+  temporal_rho: 0.5
+elasticity:
+  scale: 1.0
+complementarity:
+  gamma: 0.03
+solver:
+  max_stages: 1
+  fixed_q2_pattern: true
+  fixed_pattern_source: mirror
+  fixed_pattern_path: q3_test/configs/current_result_mirror/frozen_inputs/q3_discovery_plan.csv
+  mip_gap: 0.001
+  time_limit: 180
+  eps_z: null
+  eps_e: null
+inputs:
+  attachment1: doc/C题/附件1.xlsx
+  attachment2: doc/C题/附件2.xlsx
+  template: doc/C题/附件3/result2.xlsx
+  analysis_report: 题目分析报告.md
+  terms_table: 术语表格.md
+  q2_baseline: q3_test/configs/current_result_mirror/frozen_inputs/q2_selected_plan.csv
+  q3_discovery_pattern: q3_test/configs/current_result_mirror/frozen_inputs/q3_discovery_plan.csv
+input_hashes:
+  doc/C题/附件1.xlsx: 5E98BF5E1B247624397E57E74759DA293BD72005DAA0E2DF3710A0DAC0E9EF6A
+  doc/C题/附件2.xlsx: 869081A3AB47D3BF8D0955106B622AAF0FD2C068FADA7948DA69B20EBF1D00CE
+  doc/C题/附件3/result2.xlsx: 6A1BA9FC28D14D0A4A795E5F0B7261FB6E32165517AFEE62BCD1931ABA5BEE8A
+  题目分析报告.md: C5DAE0CFEB81344F49E2D2D6ED704A7368C56AFD2D1A1B343609EC99499AFB17
+  术语表格.md: ED61B2FC173DA28A0FF0010749454D5027C5F18099EF235DA412BFE6B5ABE61B
+  q3_test/configs/current_result_mirror/frozen_inputs/q2_selected_plan.csv: ACAE51363E165A007A3EBAE76DE1470C226673003552AEEFEEFE4D37A1FFC491
+  q3_test/configs/current_result_mirror/frozen_inputs/q3_discovery_plan.csv: D420BA93688C586BD55F1F99A1E7090F0DD80AC18703985E1CC579C6B285E6E4
+evaluation:
+  oos_seed_offset: 999
+  qualified_multiseed: [3024, 3025, 3026]
+  qualified_sample_sizes: [2000, 2000, 5000]
+  raw_kendall_threshold: 0.05
+  reduced_kendall_threshold: 0.15
+artifacts:
+  output_dir: doc/results/q3/reproduced
+  reference_dir: doc/results/q3

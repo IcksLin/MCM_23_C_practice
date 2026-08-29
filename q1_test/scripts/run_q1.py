@@ -253,18 +253,18 @@ def run_scenario(md, scenario, args, log_name):
             result["error"] = "solution audit failed before Excel export"
             return result
 
-        candidate = out_path.with_name(out_path.stem + ".candidate" + out_path.suffix)
-        candidate.unlink(missing_ok=True)
-        export_excel.export_result_workbook(sol, md, template, candidate)
-        rt = export_excel.reread_audit(candidate, sol, md)
+        staged_output = out_path.with_name(out_path.stem + ".staged" + out_path.suffix)
+        staged_output.unlink(missing_ok=True)
+        export_excel.export_result_workbook(sol, md, template, staged_output)
+        rt = export_excel.reread_audit(staged_output, sol, md)
         audit.excel_roundtrip_diff = rt
         if rt >= 1e-4:
-            candidate.unlink(missing_ok=True)
+            staged_output.unlink(missing_ok=True)
             audit.feasible = False
             result["error"] = f"Excel round-trip diff too large: {rt}"
             result["audit"] = audit
             return result
-        candidate.replace(out_path)
+        staged_output.replace(out_path)
         certified = (result["primary_certified"] and
                      result["lex_feasible"] and result["lex_certified"])
         result.update({"ok": True, "certified": certified,
@@ -641,6 +641,9 @@ def main():
         for key, flag in mapping.items():
             if key in cfg and flag not in provided:
                 setattr(args, key, cfg[key])
+        output_dir = cfg.get("artifacts", {}).get("output_dir")
+        if output_dir:
+            paths.configure_output_dir(output_dir)
 
     t0 = time.time()
     generated = []

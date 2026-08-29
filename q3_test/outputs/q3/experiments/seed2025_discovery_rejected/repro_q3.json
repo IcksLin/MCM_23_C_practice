@@ -1,0 +1,27 @@
+{
+  "seed": 2025,
+  "raw_scenarios": 2000,
+  "reduced_scenarios": 3,
+  "out_sample": 5000,
+  "beta": 0.9,
+  "eta": 0.5,
+  "gamma": 0.03,
+  "lambdas": [
+    0.5
+  ],
+  "selected_lambda": 0.5,
+  "time_limit": 900,
+  "mip_gap": 0.05,
+  "max_stages": 1,
+  "fixed_q2_pattern": false,
+  "fixed_pattern_source": "q2",
+  "allow_uncertified": true,
+  "config_hash": "82149b0f87d7779e",
+  "solver_backend": "scipy_highs",
+  "supports_mip_start": false,
+  "frontier_complete": false,
+  "selected_certified": false,
+  "q3_mean_profit": 30266799.632462855,
+  "q2_mean_profit": 24358398.776291613,
+  "timestamp": 1788016642.9417534
+}

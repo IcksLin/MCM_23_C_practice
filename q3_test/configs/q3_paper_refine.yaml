@@ -1,0 +1,28 @@
+# Q3 论文精炼：固定小K发现的新整数结构，用K=30重优化面积与风险指标。
+seed: 2024
+distribution: uniform
+raw_scenarios: 2000
+reduced_scenarios: 30
+out_sample: 5000
+beta: 0.90
+lambda_grid: [0.0, 0.5, 1.0]
+eta: 0.5
+
+dependency:
+  df: 5
+  correlation_scale: 1.0
+  temporal_rho: 0.5
+
+elasticity:
+  scale: 1.0
+
+complementarity:
+  gamma: 0.03
+
+solver:
+  max_stages: 1
+  fixed_q2_pattern: true
+  fixed_pattern_source: q3_selected
+  mip_gap: 0.001
+  time_limit: 180
+  checkpoint: false

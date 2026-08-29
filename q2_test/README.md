@@ -1,86 +1,59 @@
-# 问题 2 编程实现与运行说明
+# 问题2：情景随机 MILP 与均值-CVaR
 
-本目录实现 2024 年数学建模国赛 C 题问题 2 的情景随机 MILP 求解，包含 LHS 情景生成、PAM k-medoids 情景缩减、均值-CVaR 风险权衡、三级字典序优化、样本外评估和安全 Excel 回填。
+## 状态
 
-## 一键运行
+已实现 LHS、PAM、均值-CVaR、三级字典序、OOS、审计和 Excel。当前 `lambda=0/0.1` 有可行点，其余点超时无 incumbent；风险前沿不完整，未认证。
 
-Windows 下双击 `一键运行问题2.bat`，或在本目录终端执行：
+## 配置与运行
 
-```bat
-一键运行问题2.bat
-```
-
-安装依赖：
+当前结果镜像位于 `configs/current_result_mirror/`；其中冻结Q1基线，避免隐式读取Q1普通输出目录。
 
 ```powershell
-python -m pip install -r requirements.txt
+.\run_problem.ps1 -ConfigPath q2_test\configs\current_result_mirror\config.yaml
 ```
 
-## 手动运行
+## 当前基准
 
-```powershell
-# 正式求解（11个lambda各含三级MILP，实际耗时取决于CPU和gap）
-python scripts/run_q2.py --seed 2024 --raw-scenarios 1000 --reduced-scenarios 30 --beta 0.90 --lambda-grid 0:1:0.1 --out-sample 5000 --mip-gap 0.001 --time-limit 600 --eta 0.5 --figures --reports
+- `lambda=0` 训练期望利润：24,376,595.14元。
+- 5000情景 OOS 平均利润：24,377,039.02元。
+- OOS 最差10%平均利润：24,172,746.88元。
+- Stage 1 修正 gap：102.36%，理论界很松，只能作为可行基线。
 
-# 完整流水线冒烟测试
-python scripts/pipeline_test.py
+`risk_frontier.csv` 旧 `dual_bound=544` 来自 Stage 3 激活数，不是利润上界。求解层已新增 `objective_value/objective_bound/corrected_gap`，现有 CSV 需重跑才会更新。
 
-# P1 门禁（最小纵向验证）
-python scripts/p1_test.py
+## 产物
+
+冻结参考结果位于 `doc/results/q2/`；镜像运行输出到 `doc/results/q2/reproduced/`。历史求解产物仍保留于 `outputs/q2/`。
+
+## 工程结构
+
+```text
+q2_test/
+├─ algorithms/
+│  ├─ io_data.py, preprocess.py       # 数据读取与ModelData
+│  ├─ scenarios.py                    # LHS需求/产量/成本/价格情景
+│  ├─ scenario_reduction.py           # PAM代表情景与权重
+│  ├─ model.py, solve.py              # 均值-CVaR MILP与三级字典序
+│  ├─ risk.py, validate.py            # CVaR/前沿选择与约束复算
+│  ├─ export_ooxml.py                 # result2模板安全回填
+│  └─ plots.py                        # 9类正式图表
+├─ scripts/run_q2.py                  # 正式主入口
+├─ scripts/p1_test.py, pipeline_test.py
+├─ configs/current_result_mirror/     # 独立Config、冻结Q1基线、manifest
+├─ outputs/q2/
+├─ doc/
+└─ run.ps1
 ```
 
-主要参数：
+## 产物说明
 
-- `--raw-scenarios N`：LHS 原始情景数（默认 1000）。
-- `--reduced-scenarios K`：PAM 缩减后情景数（默认 30）。
-- `--beta`：CVaR 置信水平（默认 0.90，即最差 10% 尾部）。
-- `--lambda-grid start:stop:step`：风险偏好网格（默认 0:1:0.1，11 个点）。
-- `--out-sample N`：样本外评估情景数（默认 5000）。
-- `--eta`：最小种植面积比例。
-- `--mip-gap`、`--time-limit`：求解终止条件。
-- `--allow-uncertified`：仅用于P1/冒烟测试。正式运行不使用；未达到认证门槛时程序以退出码2结束并明确标记候选解。
-
-## 模型口径
-
-- 决策变量与 Q1 一致（地块—作物—年份—季次面积 + 激活二元变量），但所有参数（需求、产量、成本、价格）均为随机情景。
-- LHS 抽样生成 N 个原始情景，PAM k-medoids 缩减为 K 个代表性情景（带尾部保护，最差利润层至少占 10%）。
-- 目标函数：均值-CVaR 加权 Z_lambda = (1-lambda)*E[Pi] + lambda*LCVaR_beta。
-- 三级字典序优化：① 最大化 Z_lambda → ② 最大化 E[Pi]（约束 Z_lambda >= Z* - eps）→ ③ 最小化种植激活数（约束 E[Pi] >= E* - eps）。
-- 风险前沿膝点选择：在 lambda 网格上寻找利润-CVaR 帕累托前沿的膝点。
-
-## 代码职责
-
-- `algorithms/paths.py`：相对路径配置。
-- `algorithms/io_data.py`：只读 Excel 读取（附件 1/2 + result2 模板）。
-- `algorithms/preprocess.py`：数据清洗 & ModelData 组装。
-- `algorithms/scenarios.py`：LHS 情景生成（需求/产量/成本/价格）。
-- `algorithms/scenario_reduction.py`：PAM k-medoids 情景缩减（带尾部保护）。
-- `algorithms/model.py`：均值-CVaR 随机 MILP 构建。
-- `algorithms/solve.py`：三级字典序求解 + LP 约束违反审计。
-- `algorithms/risk.py`：CVaR 复算 & 风险前沿膝点选择。
-- `algorithms/validate.py`：约束审计。
-- `algorithms/export_ooxml.py`：安全 Excel 模板回填（ZIP/XML 操作）。
-- `algorithms/plots.py`：9 张图表生成。
-- `scripts/run_q2.py`：正式流水线入口 + 进度条。
-- `scripts/p1_test.py`：P1 门禁（最小纵向验证）。
-- `scripts/pipeline_test.py`：极小参数完整流水线测试。
-
-## 产物文件说明
-
-所有产物位于 `outputs/q2/`：
-
-| 文件 | 含义 |
-|---|---|
-| `result2.xlsx` | 最终种植方案（2024—2030，7 个年份工作表），回填到 result2 模板 |
-| `risk_frontier.csv` | 风险前沿表：每个 lambda 的 Z_lambda、期望利润、CVaR、激活数、gap、求解时间、字典序阶段、认证状态 |
-| `scenario_summary.csv` | 情景摘要：原始情景数、种子、分布类型、各参数维度 |
-| `selected_plan.csv` | 选中方案的非零种植计划（地块/作物/年份/季次/面积） |
-| `out_of_sample_profits.csv` | 选中方案、Q1基线和风险中性方案在同一随机流上的样本外利润 |
-| `out_of_sample_metrics.csv` | 样本外评估汇总：均值、标准差、分位数、最低利润、亏损概率、CVaR |
-| `audit_q2.csv` | 约束审计报告：面积/轮作/销售/利润/CVaR/整数等约束的违反量和可行判定 |
-| `repro_q2.json` | 可复现性清单：输入哈希、Python 版本、参数、求解统计、输出哈希 |
-| `figures/` | 9 张图表（PNG + SVG），灰度预览位于 `figures/_qa/` |
-
-## 当前产物状态
-
-当前 `outputs/q2/` 是修复后的流水线冒烟产物（10个原始情景、1个代表情景、20个样本外情景、仅 `lambda=0`），用于证明读取、求解、审计、Excel回填和绘图能够贯通。它约束可行但未认证，**不是问题2正式最终答案**。正式结果必须由上述1000/30/5000唯一命令重新生成，并依据 `audit_q2.csv`、风险前沿完整性和求解认证状态决定能否用于问题3。
+| 文件 | 含义 | 交付判定 |
+|---|---|---|
+| `result2.xlsx` | 选中的7年种植方案 | 当前为未认证可行基线 |
+| `selected_plan.csv` | 非零面积长表 | Q3共同随机数对照输入 |
+| `risk_frontier.csv` | 各lambda的Z、期望利润、CVaR、gap和字典序状态 | 当前前沿不完整 |
+| `scenario_summary.csv` | 情景规模、分布和维度 | 生成审计 |
+| `out_of_sample_profits.csv` | 每个OOS情景利润 | 统计检验原始值 |
+| `out_of_sample_metrics.csv` | 均值、标准差、分位数和尾部均值 | 论文性能表来源 |
+| `audit_q2.csv` | 硬约束、复算差与导出审计 | 可行性主证据 |
+| `repro_q2.json` | 输入/输出哈希、参数和环境 | 复现清单 |

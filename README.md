@@ -1,123 +1,67 @@
-# 2024 年高教社杯全国大学生数学建模竞赛 C 题 — 农作物的种植策略
+# 2024 年高教社杯数学建模 C 题：农作物种植策略
 
-> 本工程是学习与研究用草稿，不直接作为参赛作品提交。正式使用前需由队伍人工核对、改写。
+> 工程已实现问题1—3的建模、求解、审计和结果导出。未通过最优性认证的结果只能称为“可行解”或“优质近似解”。
 
-## 工程总览
+## 当前状态
 
-本工程实现 2024 年国赛 C 题的建模与求解，按问题分为独立子工程：
-
-| 子工程 | 路径 | 状态 | 说明 |
+| 子工程 | 实现状态 | 当前结果 | 认证边界 |
 |---|---|---|---|
-| 问题 1 | `q1_test/` | 代码已完成，求解验证中 | 两种滞销情形的确定性 MILP |
-| 问题 2 | `q2_test/` | 代码已完成，求解验证中 | 情景随机 MILP + CVaR 风险权衡 |
-| 问题 3 | — | 待规划 | 不确定参数相关性与鲁棒优化 |
+| `q1_test/` | 两种滞销情形确定性 MILP、审计、Excel、敏感性已实现 | 有可行解 | gap 较大，未证明最优 |
+| `q2_test/` | LHS + PAM + 均值-CVaR + 三级字典序已实现 | `lambda=0/0.1` 有可行点 | 前沿不完整，未认证 |
+| `q3_test/` | 相关情景、弹性、豆科互补、全整数发现与固定结构精炼已实现 | 新种植结构 + `K=30` 精炼方案 | 全整数 gap 31.47%；条件 gap 0 |
 
-## 目录结构
+## 统一实验基准
+
+- `doc/三问实验基准与对照.csv`：当前 incumbent、正向理论界、修正 gap、OOS 和审计状态。
+- `doc/三问实验评价标准.md`：后续调参的判定规则。
+- `doc/三问MIP_gap口径说明.md`：最大化目标的正向界与 gap 换算。
+
+## 运行
+
+```powershell
+.\run_problem.ps1 -ConfigPath q1_test\configs\current_result_mirror\config.yaml
+.\run_problem.ps1 -ConfigPath q2_test\configs\current_result_mirror\config.yaml
+.\run_problem.ps1 -ConfigPath q3_test\configs\current_result_mirror\config.yaml
+```
+
+统一启动器只接收Config路径，先校验镜像输入SHA-256，再按 `problem` 调用对应主程序。三问Config互不继承。使用 `-ValidateOnly` 可只做解析与哈希预检。输出统一写入 `doc/results/qN/reproduced/`；题目模板只读。
+
+## 交付原则
+
+1. `doc/C题/` 原始附件和模板只读。
+2. 硬约束不通过时，利润再高也不得入选。
+3. Stage 3 最少激活数 gap 不得冒充利润 gap。
+4. Q3 条件 gap 0 不等于全整数全局 gap 0。
+5. 论文数值必须可追溯到 CSV/JSON 产物。
+
+## 全局工程结构
 
 ```text
 practice_1/
-├── doc/                          # 顶层文档
-│   ├── C题/                       # 只读赛题附件
-│   │   ├── C题.pdf
-│   │   ├── 附件1.xlsx             # 54 地块 + 41 作物基本情况
-│   │   ├── 附件2.xlsx             # 2023 种植 + 亩产/成本/价格
-│   │   └── 附件3/                 # 输出模板
-│   │       ├── result1_1.xlsx     # 问题1 情形1 模板
-│   │       ├── result1_2.xlsx     # 问题1 情形2 模板
-│   │       └── result2.xlsx        # 问题2 模板
-│   └── 2024_C题_农作物的种植策略.md
-├── q1_test/                      # 问题1 子工程
-│   ├── AGENT.md                   # Q1 实现指导
-│   ├── algorithms/                # 算法模块
-│   ├── scripts/                   # 工具脚本
-│   ├── outputs/
-│   │   ├── data_cleaning/         # 数据清洗产物
-│   │   └── q1/                    # Q1 输出产物
-│   ├── doc/                       # Q1 文字报告
-│   ├── README.md
-│   ├── requirements.txt
-│   └── 一键运行问题1.bat
-├── q2_test/                      # 问题2 子工程
-│   ├── AGENT.md                   # Q2 实现指导（权威合同）
-│   ├── algorithms/                # 算法模块（已实现）
-│   │   ├── paths.py               # 路径配置（相对路径）
-│   │   ├── io_data.py             # 只读 Excel 读取
-│   │   ├── preprocess.py          # 数据清洗 & ModelData
-│   │   ├── scenarios.py           # LHS 情景生成
-│   │   ├── scenario_reduction.py  # PAM k-medoids 缩减
-│   │   ├── model.py               # 均值-CVaR 随机 MILP
-│   │   ├── solve.py               # 三级字典序求解
-│   │   ├── risk.py                # CVaR 复算 & 膝点选择
-│   │   ├── validate.py            # 约束审计
-│   │   ├── export_ooxml.py        # 安全 Excel 回填
-│   │   └── plots.py               # 9 张图表
-│   ├── scripts/                   # 工具脚本
-│   │   └── run_q2.py              # Q2 主入口
-│   ├── outputs/q2/                # Q2 输出产物（运行时生成）
-│   ├── doc/                       # Q2 文字报告（运行时生成）
-│   ├── README.md
-│   ├── requirements.txt
-│   └── 一键运行问题2.bat
-├── 题目分析报告.md                 # 全题建模分析（Q1-Q3）
-├── 术语表格.md                     # 术语、符号、单位统一
-└── 使用指南.md                     # Skill 使用说明
+├─ doc/
+│  ├─ C题/                         # 题面PDF、附件1/2、附件3结果模板（只读）
+│  ├─ results/q1|q2|q3/            # 当前参考结果及镜像复现输出
+│  ├─ 三问实验基准与对照.csv       # 统一基准数值
+│  ├─ 三问实验评价标准.md           # 新实验入选规则
+│  └─ 三问MIP_gap口径说明.md        # gap与正向理论界
+├─ q1_test/                      # 问题1独立工程
+├─ q2_test/                      # 问题2独立工程
+├─ q3_test/                      # 问题3独立工程
+├─ scripts/run_with_config.py    # Config校验与问题路由
+├─ run_problem.ps1               # 统一启动脚本
+├─ 题目分析报告.md                 # Q1—Q3数学模型
+├─ 术语表格.md                     # 符号、单位和口径
+└─ 使用指南.md
 ```
 
-## 环境配置
+每个子工程统一采用 `algorithms/ + scripts/ + configs/ + outputs/ + doc/`。具体模块和产物含义见对应子问题 README。
 
-依赖 Anaconda/Miniconda 管理的 Python 环境。激活环境后安装依赖：
+## 全局核心产物
 
-```powershell
-# 问题1
-cd q1_test
-python -m pip install -r requirements.txt
-
-# 问题2
-cd q2_test
-python -m pip install -r requirements.txt
-```
-
-核心依赖：`numpy`, `pandas`, `scipy`(含 HiGHS MILP 求解器), `openpyxl`, `matplotlib`。
-
-## 运行方式
-
-### 问题 1
-
-```powershell
-cd q1_test
-# 一键运行（Windows）
-一键运行问题1.bat
-
-# 或手动运行
-python scripts/run_q1.py --scenario both --eta 0.5 --delta 0.001 --mip-gap 0.001 --time-limit 600 --sensitivity --figures --reports
-```
-
-### 问题 2
-
-```powershell
-cd q2_test
-# 一键运行（Windows）
-一键运行问题2.bat
-
-# 或手动运行（全量）
-python scripts/run_q2.py --seed 2024 --raw-scenarios 1000 --reduced-scenarios 30 --beta 0.90 --lambda-grid 0:1:0.1 --out-sample 5000 --mip-gap 0.001 --time-limit 600
-
-# 冒烟测试（快速验证）
-python scripts/run_q2.py --raw-scenarios 20 --reduced-scenarios 5 --out-sample 50 --time-limit 30 --mip-gap 0.05 --figures
-```
-
-## 关键文档
-
-| 文档 | 用途 |
-|---|---|
-| `题目分析报告.md` | 全题建模分析，第 6 章 Q1、第 12 章 Q2 为权威模型合同 |
-| `术语表格.md` | 术语、符号、单位统一 |
-| `q1_test/AGENT.md` | Q1 编程实现指导 |
-| `q2_test/AGENT.md` | Q2 编程实现指导（权威合同） |
-
-## 交付边界
-
-- 原始 PDF、附件和模板只读，不修改。
-- 各子工程独立管理算法、脚本和输出，使用相对路径保证可移植性。
-- 未完成门禁检查时，不得声称编程交付完成。
-- 所有数值、公式、图表、引用须独立验证后方可用于正式提交。
+| 产物 | 路径 | 用途 |
+|---|---|---|
+| Q1两种方案 | `doc/results/q1/result1_1.xlsx`、`result1_2.xlsx` | 当前冻结参考方案 |
+| Q2方案 | `doc/results/q2/result2.xlsx` | 当前冻结参考方案 |
+| Q3优质近似解 | `doc/results/q3/result3.xlsx` | 非官方模板的方案展示文件 |
+| 三问数值基准 | `doc/三问实验基准与对照.csv` | 后续优化对照的唯一统一表 |
+| gap口径 | `doc/三问MIP_gap口径说明.md` | 防止把最小化负目标或Stage 3 gap当成利润gap |

@@ -1,0 +1,2 @@
+﻿seed,raw_n,reduced_k,audit_columns,audit_pairs,raw_max_kendall_error,raw_threshold,raw_pass,reduced_max_kendall_error,reduced_threshold,reduced_direction_consistent,reduced_pass,weight_sum,tail_representatives
+2024,2000,30,84,333,0.04620404564031662,0.05,True,0.5784479697557986,0.15,False,False,0.9999999999999999,3

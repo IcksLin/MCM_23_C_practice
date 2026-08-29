@@ -51,7 +51,7 @@ from algorithms.risk import (recompute_scenario_profits, compute_cvar,
 from algorithms.dependency import DependencyConfig, BASE_LOADINGS
 from algorithms.elasticity import ElasticityConfig, build_elasticity_matrix, audit_elasticity
 from algorithms.validate import validate_solution
-from algorithms.export_ooxml import patch_result3
+from algorithms.export_ooxml import export_result3_workbook
 
 
 def _print_progress(pct: int, msg: str) -> None:
@@ -106,12 +106,25 @@ def main() -> int:
                         help="禁用检查点")
     args = parser.parse_args()
 
-    ensure_dirs()
-
     # ---- 加载配置 ----
     config = {}
     if args.config:
         config = _load_config(Path(args.config))
+        provided = set(sys.argv[1:])
+        flag_map = {
+            "figures": "--figures", "reports": "--reports",
+            "allow_uncertified": "--allow-uncertified",
+            "no_checkpoint": "--no-checkpoint",
+        }
+        for key, flag in flag_map.items():
+            if key in config and flag not in provided:
+                setattr(args, key, bool(config[key]))
+        if args.eps_z is None:
+            args.eps_z = config.get("solver", {}).get("eps_z")
+        if args.eps_e is None:
+            args.eps_e = config.get("solver", {}).get("eps_e")
+    paths.configure_from_config(config)
+    ensure_dirs()
     argv = set(sys.argv[1:])
     def choose(flag, cli_value, cfg_value):
         return cli_value if flag in argv else cfg_value
@@ -132,6 +145,15 @@ def main() -> int:
                      config.get("solver", {}).get("mip_gap", args.mip_gap))
     max_stages = int(config.get("solver", {}).get("max_stages", 3))
     fixed_pattern = bool(config.get("solver", {}).get("fixed_q2_pattern", False))
+    fixed_pattern_source = str(config.get("solver", {}).get(
+        "fixed_pattern_source", "q2"))
+    fixed_pattern_path_raw = config.get("solver", {}).get("fixed_pattern_path")
+    fixed_pattern_path = None
+    if fixed_pattern_path_raw:
+        fixed_pattern_path = Path(fixed_pattern_path_raw)
+        if not fixed_pattern_path.is_absolute():
+            fixed_pattern_path = paths.PROJECT_ROOT / fixed_pattern_path
+        fixed_pattern_path = fixed_pattern_path.resolve()
 
     # lambda网格
     if "lambda_grid" in config and "--lambda-grid" not in argv:
@@ -156,6 +178,7 @@ def main() -> int:
         "eta": eta, "gamma": gamma, "lambdas": lambdas,
         "time_limit": time_limit, "mip_gap": mip_gap,
         "max_stages": max_stages,
+        "fixed_pattern_path": str(fixed_pattern_path) if fixed_pattern_path else None,
     })
 
     print("=" * 60)
@@ -182,6 +205,14 @@ def main() -> int:
         _print_progress(12, "Q2基线读取")
         baseline = load_q2_baseline(paths.Q2_SELECTED_PLAN)
         plan_x_q2 = baseline.area
+        fixed_pattern_x = None
+        if fixed_pattern:
+            if fixed_pattern_path is not None:
+                fixed_pattern_x = load_q2_baseline(fixed_pattern_path).area
+            elif fixed_pattern_source == "q3_selected":
+                fixed_pattern_x = load_q2_baseline(paths.SELECTED_PLAN_Q3).area
+            else:
+                fixed_pattern_x = plan_x_q2
 
         # ---- 4. 求解器探测 ----
         _print_progress(15, "求解器探测")
@@ -211,7 +242,7 @@ def main() -> int:
         # 弱相关对小样本必然存在虚假相关，仅靠方向一致性硬门禁拦截
         dependency_gate_failed = (
                 scenarios.dependency_audit.max_kendall_error > 0.05
-                or red_audit.max_kendall_error > 0.20
+                or red_audit.max_kendall_error > 0.15
                 or not red_audit.kendall_direction_consistent)
         if dependency_gate_failed and not args.allow_uncertified:
             raise RuntimeError("相关情景原始/缩减 Kendall 门禁未通过")
@@ -232,14 +263,15 @@ def main() -> int:
                 mip_gap=mip_gap, eps_z=args.eps_z, eps_e=args.eps_e,
                 ckpt_dir=ckpt_dir, config_hash=config_hash,
                 max_stages=max_stages,
-                fixed_pattern_x=plan_x_q2 if fixed_pattern else None,
+                fixed_pattern_x=fixed_pattern_x,
             )
             z_star = result.get("z_star")
             e_star = result.get("e_star")
             n_act = result.get("n_activations")
             final_result = result.get("result")
             solver_status = getattr(final_result, "solver_status", "unknown") if final_result else "unknown"
-            mip_gap_val = getattr(final_result, "mip_gap", float("nan")) if final_result else float("nan")
+            mip_gap_val = getattr(final_result, "corrected_gap", float("nan")) if final_result else float("nan")
+            objective_bound = getattr(final_result, "objective_bound", float("nan")) if final_result else float("nan")
             lex_complete = result.get("lex_complete", False)
 
             if z_star is not None:
@@ -264,6 +296,7 @@ def main() -> int:
                     "solver_status": solver_status,
                     "status": solver_status,
                     "mip_gap": mip_gap_val,
+                    "objective_bound": objective_bound,
                     "lex_complete": lex_complete,
                     "result": final_result,
                     "model": result.get("model"),
@@ -281,6 +314,7 @@ def main() -> int:
                     "solver_status": solver_status,
                     "status": solver_status,
                     "mip_gap": float("nan"),
+                    "objective_bound": float("nan"),
                     "lex_complete": False,
                     "result": final_result,
                     "model": result.get("model"),
@@ -354,9 +388,9 @@ def main() -> int:
         # ---- 11. Excel候选 ----
         _print_progress(92, "Excel候选生成")
         try:
-            readback_diff = patch_result3(
+            readback_diff = export_result3_workbook(
                 sel_point["solution"], data,
-                paths.TEMPLATE2_PATH, paths.RESULT3_CANDIDATE)
+                paths.TEMPLATE2_PATH, paths.RESULT3_PATH)
             print(f"  回读差: {readback_diff:.2e}")
         except Exception as e:
             print(f"  Excel导出失败: {e}")
@@ -413,6 +447,8 @@ def main() -> int:
             "mip_gap": mip_gap,
             "max_stages": max_stages,
             "fixed_q2_pattern": fixed_pattern,
+            "fixed_pattern_source": fixed_pattern_source,
+            "fixed_pattern_path": str(fixed_pattern_path) if fixed_pattern_path else None,
             "allow_uncertified": bool(args.allow_uncertified),
             "config_hash": config_hash,
             "solver_backend": caps.backend,

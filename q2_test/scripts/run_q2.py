@@ -35,7 +35,7 @@ from algorithms.solve import solve_lexicographic, extract_solution
 from algorithms.risk import (recompute_scenario_profits, compute_cvar,
                              select_unique_plan, pareto_nondominated)
 from algorithms.validate import validate_solution
-from algorithms.export_ooxml import patch_result2
+from algorithms.export_ooxml import export_result2_workbook
 from algorithms.plots import generate_figures
 
 
@@ -244,6 +244,7 @@ def main():
         for key, flag in mapping.items():
             if key in cfg and flag not in provided:
                 setattr(args, key, cfg[key])
+        paths.configure_from_config(cfg)
 
     paths.ensure_dirs()
     start_time = time.time()
@@ -433,7 +434,7 @@ def main():
 
     # ---- 9. Excel patch + post-export audit ----
     _print_progress(92, "Excel模板回填与结构审计")
-    excel_audit = patch_result2(
+    excel_audit = export_result2_workbook(
         plan, data, paths.TEMPLATE2_PATH, paths.RESULT2_PATH)
     _print_progress(95, "最终约束审计")
     audit = validate_solution(

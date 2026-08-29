@@ -297,7 +297,7 @@ q2_test/
 ├─ outputs/q2/
 ├─ doc/
 ├─ requirements.txt
-└─ 一键运行问题2.bat
+└─ run.ps1
 ```
 
 建议接口：
@@ -315,7 +315,7 @@ recompute_scenario_profits(plan, scenarios) -> DataFrame
 select_unique_plan(frontier: DataFrame) -> str
 evaluate_fixed_plan(plan, scenarios) -> EvaluationReport
 validate_solution(plan, data, scenarios) -> AuditReport
-patch_result2_ooxml(plan, template_path, output_path) -> None
+export_result2_workbook(plan, template_path, output_path) -> None
 generate_figures(data, scenarios, frontier, evaluation, output_dir) -> None
 ```
 
@@ -489,7 +489,7 @@ cd "D:\时光归墟\赛事\数模\practice_1\q2_test"
 python scripts/run_q2.py --seed 2024 --raw-scenarios 1000 --reduced-scenarios 30 --beta 0.90 --lambda-grid 0:1:0.1 --out-sample 5000 --mip-gap 0.001 --time-limit 600
 ```
 
-并创建纯ASCII内容的 `一键运行问题2.bat`，避免Windows CMD中文编码错误。批处理可以显示英文阶段提示，Python程序负责打印中文进度条。
+使用全局 `run_problem.ps1 -ConfigPath <path>` 启动，启动器固定UTF-8环境并透传退出码。
 
 建议进度节点：输入5%、清洗10%、情景生成20%、缩减30%、各 `lambda` 求解30%—75%、样本外评估85%、Excel审计92%、图表和报告98%、完成100%。进度百分比表示流水线阶段，不伪装成MILP内部收敛比例。
 

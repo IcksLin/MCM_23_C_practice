@@ -1,0 +1,27 @@
+# Q3 全整数结构改进搜索：独立随机流，结果必须与现有 seed=2024 候选比较后再晋级。
+seed: 2025
+distribution: uniform
+raw_scenarios: 2000
+reduced_scenarios: 3
+out_sample: 5000
+beta: 0.90
+lambda_grid: [0.5]
+eta: 0.5
+
+dependency:
+  df: 5
+  correlation_scale: 1.0
+  temporal_rho: 0.5
+
+elasticity:
+  scale: 1.0
+
+complementarity:
+  gamma: 0.03
+
+solver:
+  max_stages: 1
+  fixed_q2_pattern: false
+  mip_gap: 0.05
+  time_limit: 900
+  checkpoint: false

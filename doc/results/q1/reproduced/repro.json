@@ -1,0 +1,118 @@
+{
+  "inputs": {
+    "附件1.xlsx": {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\doc\\C题\\附件1.xlsx",
+      "sha256": "5E98BF5E1B247624397E57E74759DA293BD72005DAA0E2DF3710A0DAC0E9EF6A"
+    },
+    "附件2.xlsx": {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\doc\\C题\\附件2.xlsx",
+      "sha256": "869081A3AB47D3BF8D0955106B622AAF0FD2C068FADA7948DA69B20EBF1D00CE"
+    },
+    "result1_1.xlsx (template)": {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\doc\\C题\\附件3\\result1_1.xlsx",
+      "sha256": "4F2484C0D70A5C4D047163F2EE6EF486949E813330466F46DEF4BD7D98AF06AF"
+    },
+    "result1_2.xlsx (template)": {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\doc\\C题\\附件3\\result1_2.xlsx",
+      "sha256": "6166D43F5A64BF9D1657E80D4AEE7F10F54BB1A5695B81A28A0AC5E657297649"
+    }
+  },
+  "versions": {
+    "python": "3.13.5",
+    "pandas": "2.2.3",
+    "scipy": "1.15.3",
+    "matplotlib": "3.10.0",
+    "openpyxl": "3.1.5",
+    "solver": "HiGHS via scipy.optimize.milp"
+  },
+  "parameters": {
+    "seed": 2024,
+    "eta": 0.5,
+    "delta": 0.001,
+    "lambda": 1.0,
+    "mip_gap": 0.001,
+    "time_limit": 20.0,
+    "scenario": "both"
+  },
+  "timestamps": {
+    "start": "2026-08-30T00:15:33.675540",
+    "end": "2026-08-30T00:16:56.022132",
+    "duration_seconds": 82.35
+  },
+  "solves": {
+    "scenario_1": {
+      "scenario": 1,
+      "Z": 34229493.25,
+      "primary_Z": 34229493.25,
+      "status": 1,
+      "profit_upper_bound": 41156748.417404935,
+      "mip_gap": 0.20237679584709992,
+      "node_count": 0,
+      "time": 20.071345329284668,
+      "primary_certified": false,
+      "lex_feasible": false,
+      "lex_certified": false,
+      "certified": false,
+      "error": null
+    },
+    "scenario_2": {
+      "scenario": 2,
+      "Z": 42570196.625,
+      "primary_Z": 42570196.625,
+      "status": 1,
+      "profit_upper_bound": 63924730.61233927,
+      "mip_gap": 0.5016310865427973,
+      "node_count": 0,
+      "time": 20.067410469055176,
+      "primary_certified": false,
+      "lex_feasible": false,
+      "lex_certified": false,
+      "certified": false,
+      "error": null
+    }
+  },
+  "outputs": [
+    {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\doc\\results\\q1\\reproduced\\data_cleaning\\plots.csv",
+      "sha256": "401B3374CFC229BA391AB2E8F0BD722A1E3BBC41DADAE316536DA58305FA3D4C"
+    },
+    {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\doc\\results\\q1\\reproduced\\data_cleaning\\crops.csv",
+      "sha256": "5469C8F43A21F639A6E2CA2B90A57BCDF9D49C61EBD5212D002CE2C62046CD85"
+    },
+    {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\doc\\results\\q1\\reproduced\\data_cleaning\\planting_2023.csv",
+      "sha256": "34FF703EB8D859BA367F61428B048C6CA2CB65FA43183DFE8F6D117BA400A7CD"
+    },
+    {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\doc\\results\\q1\\reproduced\\data_cleaning\\stats_2023.csv",
+      "sha256": "A8C7730C37823B8D869F0F056A20F51F4C4CBF755462F2C7645BE86FFC3195F7"
+    },
+    {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\doc\\results\\q1\\reproduced\\data_cleaning\\data_assertions.txt",
+      "sha256": "9EE76B15168978CD58E05244C31903FC478042889FECFC50512D3860B60643BF"
+    },
+    {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\doc\\results\\q1\\reproduced\\result1_1.xlsx",
+      "sha256": "A090CE337A5EF73D190B813FC0DD36E68E65121217EB0D34B1CDEB1049785F1D"
+    },
+    {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\doc\\results\\q1\\reproduced\\result1_2.xlsx",
+      "sha256": "69C88601FF5F29CD1F40950439E34959A2D10F2FAC86EB45996EDDECE0D99CA0"
+    },
+    {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\doc\\results\\q1\\reproduced\\yearly_stats.csv",
+      "sha256": "011B15D700D3FF353D222F94F03B90C5D7E216ED9DAFF04E38F4F1C622C64670"
+    },
+    {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\doc\\results\\q1\\reproduced\\audit.csv",
+      "sha256": "A3A2AA1B6C8F1CC1A7E5FEAC033DE7A87546A11B91F77DEE5FEFEF20FB90D1BF"
+    },
+    {
+      "path": "D:\\时光归墟\\赛事\\数模\\practice_1\\doc\\results\\q1\\reproduced\\Q1_建模实现报告.md",
+      "sha256": "9A11D22685E1D61CEB664CC6616CCBB5319052BB1AEB32E7C9F152D6AD567B25"
+    }
+  ],
+  "git_commit": "f65869cc8d964616e43c1eb420ca46cd4eef3a4e",
+  "reproduction_command": "python \"D:\\时光归墟\\赛事\\数模\\practice_1\\q1_test\\scripts\\run_q1.py\" --scenario both --eta 0.5 --delta 0.001 --demand-scale 1.0 --mip-gap 0.001 --time-limit 20.0 --seed 2024 --reports"
+}

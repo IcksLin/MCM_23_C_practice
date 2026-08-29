@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "problem": "q1",
+  "config": {
+    "path": "q1_test\\configs\\current_result_mirror\\config.yaml",
+    "sha256": "761028F71AF376266A9AB5633F968B68AB7401568C17AB4883D7E98AE5E011F4"
+  },
+  "environment": {
+    "python": "3.13.5 | packaged by Anaconda, Inc. | (main, Jun 12 2025, 16:37:03) [MSC v.1929 64 bit (AMD64)]",
+    "platform": "Windows-11-10.0.26200-SP0"
+  },
+  "inputs": {
+    "doc/C题/附件1.xlsx": {
+      "sha256": "5E98BF5E1B247624397E57E74759DA293BD72005DAA0E2DF3710A0DAC0E9EF6A",
+      "bytes": 35874
+    },
+    "doc/C题/附件2.xlsx": {
+      "sha256": "869081A3AB47D3BF8D0955106B622AAF0FD2C068FADA7948DA69B20EBF1D00CE",
+      "bytes": 21976
+    },
+    "doc/C题/附件3/result1_1.xlsx": {
+      "sha256": "4F2484C0D70A5C4D047163F2EE6EF486949E813330466F46DEF4BD7D98AF06AF",
+      "bytes": 81837
+    },
+    "doc/C题/附件3/result1_2.xlsx": {
+      "sha256": "6166D43F5A64BF9D1657E80D4AEE7F10F54BB1A5695B81A28A0AC5E657297649",
+      "bytes": 81836
+    }
+  },
+  "code": {
+    "q1_test/algorithms/__init__.py": "BDA4176DBC84385A04617D33A42D0ED29C5C81F627A5DCDE172FC5D20533BE09",
+    "q1_test/algorithms/export_excel.py": "D23B61FB87306A50BF91CCDCFFF76905D672F0DA92660ECC000D4EFE7DC91501",
+    "q1_test/algorithms/io_data.py": "4BBBB829FB2B4720BF43C9BC5D4EF56DB4CBC6CF455236196927BD100EAF888F",
+    "q1_test/algorithms/model.py": "67E810078571D36F114BA612C30637EFBD7325BF72F72B2A0FC8819C2607BAA7",
+    "q1_test/algorithms/paths.py": "3C146CE3B83F52C89E46F0BE04C7D6B88CB99A83A4890C36C037BF90DDC6681C",
+    "q1_test/algorithms/plots.py": "36022348AD6A61C381A57108526DBD79A0986AD451D83F0F7E9BB89B0071DAB5",
+    "q1_test/algorithms/preprocess.py": "81846994E528513142E61EE0720C267CB7DBCF3FA5CB95FC031772EB2B30EAC3",
+    "q1_test/algorithms/solve.py": "95424658B35D23D7FB2A1E1A8F12867E59DA28FDF610757D29848B1244DA1351",
+    "q1_test/algorithms/validate.py": "7B0CE07CA89672A54148AF0D81AC20C8BC0F3F067499638C65783445EF57E06C",
+    "q1_test/scripts/run_q1.py": "B1DE773479FC1DF0D56AD3A3F0122A7ACD029DD77AB6E31B15785C4A4EF82DCE",
+    "scripts/run_with_config.py": "CDC2A63A2351E0AD54A12266A7DF98E6C0C050FBC3B14C7DF19A3F1F0A5E3723",
+    "run_problem.ps1": "8C2B9127FE18FEDF882CB678CC0AED17187F66B5636080BF2F60DF600BD6CAB0"
+  },
+  "reference_outputs": {
+    "doc/results/q1/audit.csv": {
+      "sha256": "8E5D88920973262701571F25A34B6A394A5BB3FF7168EA0DF12DDDB575E8CCCC",
+      "bytes": 714
+    },
+    "doc/results/q1/result1_1.xlsx": {
+      "sha256": "55904B3AF7270456122B9C53001FAC383E8FD3811E3D9C02E4CA47436C2EE8A3",
+      "bytes": 81219
+    },
+    "doc/results/q1/result1_2.xlsx": {
+      "sha256": "B0C06FB9FDA1535E4AFE614A15A0A64830E7440BEF6FF03D79C7C9C8E2995E0A",
+      "bytes": 81242
+    }
+  },
+  "command": ".\\run_problem.ps1 -ConfigPath q1_test\\configs\\current_result_mirror\\config.yaml",
+  "validation_command": ".\\run_problem.ps1 -ConfigPath q1_test\\configs\\current_result_mirror\\config.yaml -ValidateOnly",
+  "reproduction_level": "feasible_incumbent; timeout MIP may not be byte-identical"
+}

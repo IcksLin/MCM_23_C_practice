@@ -1,0 +1,10 @@
+=== solve scenario=1 stage=primary eta=0.5 delta=0.0 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: Time limit reached)
+fun=-34229493.25 dual_bound=-41156748.417404935 mip_gap=0.20237679584709992 nodes=0 time=20.1s
+n_vars=15750 n_ub=19503 n_eq=1099
+
+=== solve scenario=1 stage=lex eta=0.5 delta=0.001 scale=1.0 ===
+status=1 message=Time limit reached. (HiGHS Status 13: model_status is Time limit reached; primal_status is None)
+fun=nan dual_bound=nan mip_gap=nan nodes=0 time=20.3s
+n_vars=15750 n_ub=19504 n_eq=1099
+

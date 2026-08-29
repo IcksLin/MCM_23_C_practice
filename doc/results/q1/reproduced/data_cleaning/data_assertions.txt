@@ -1,0 +1,11 @@
+data assertions
+==============
+inherited_smart_s1: 18
+missing_param_combos: []
+n_plots: 54
+n_crops: 41
+n_planting_2023: 87
+n_stats_2023: 107
+total_area: 1213.0
+smart_s1_inherited_yield: 12270.0
+smart_s1_inherited_cost: 7080.0

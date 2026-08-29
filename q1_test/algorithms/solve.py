@@ -32,6 +32,9 @@ class SolveResult:
     node_count: int
     time: float
     is_feasible: bool
+    objective_value: float = np.nan
+    objective_bound: float = np.nan
+    corrected_gap: float = np.nan
 
 
 def solve(m: MILPModel, time_limit: float = 600.0, mip_gap: float = 0.001,
@@ -88,9 +91,26 @@ def solve(m: MILPModel, time_limit: float = 600.0, mip_gap: float = 0.001,
         except Exception:
             pass
 
+    is_max_stage = m.stage == "primary"
+    objective_value = (-fun if is_max_stage else fun) if np.isfinite(fun) else np.nan
+    objective_bound = (-dual if is_max_stage else dual) if np.isfinite(dual) else np.nan
+    if status == 0 and np.isfinite(objective_value):
+        corrected_gap = 0.0
+        if not np.isfinite(objective_bound):
+            objective_bound = objective_value
+    elif np.isfinite(objective_value) and np.isfinite(objective_bound):
+        if is_max_stage:
+            corrected_gap = max(0.0, objective_bound-objective_value) / max(abs(objective_value), 1e-9)
+        else:
+            corrected_gap = max(0.0, objective_value-objective_bound) / max(abs(objective_value), 1e-9)
+    else:
+        corrected_gap = float("nan")
     return SolveResult(x=x, fun=fun, status=status, message=message,
                        mip_gap=gap, dual_bound=dual, node_count=nodes,
-                       time=elapsed, is_feasible=feas)
+                       time=elapsed, is_feasible=feas,
+                       objective_value=objective_value,
+                       objective_bound=objective_bound,
+                       corrected_gap=corrected_gap)
 
 
 def solve_primary(data: ModelData, scenario: int, eta: float = 0.5,

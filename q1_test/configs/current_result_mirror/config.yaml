@@ -1,0 +1,31 @@
+schema_version: 1
+problem: q1
+description: 问题1当前20秒可行结果镜像；不代表全局最优
+scenario: both
+eta: 0.5
+delta: 0.001
+demand_scale: 1.0
+mip_gap: 0.001
+time_limit: 20.0
+seed: 2024
+sensitivity: false
+figures: false
+reports: true
+inputs:
+  attachment1: doc/C题/附件1.xlsx
+  attachment2: doc/C题/附件2.xlsx
+  template_s1: doc/C题/附件3/result1_1.xlsx
+  template_s2: doc/C题/附件3/result1_2.xlsx
+input_hashes:
+  doc/C题/附件1.xlsx: 5E98BF5E1B247624397E57E74759DA293BD72005DAA0E2DF3710A0DAC0E9EF6A
+  doc/C题/附件2.xlsx: 869081A3AB47D3BF8D0955106B622AAF0FD2C068FADA7948DA69B20EBF1D00CE
+  doc/C题/附件3/result1_1.xlsx: 4F2484C0D70A5C4D047163F2EE6EF486949E813330466F46DEF4BD7D98AF06AF
+  doc/C题/附件3/result1_2.xlsx: 6166D43F5A64BF9D1657E80D4AEE7F10F54BB1A5695B81A28A0AC5E657297649
+model_contract:
+  surplus_disposal_s1: waste
+  surplus_price_ratio_s2: 0.5
+  feasibility_tolerance: 1.0e-6
+  excel_tolerance: 1.0e-4
+artifacts:
+  output_dir: doc/results/q1/reproduced
+  reference_dir: doc/results/q1

@@ -33,6 +33,10 @@ class ReducedScenarioSet:
     proxy_profits: np.ndarray # (K,) 每个代表的代理利润
     demand_base: dict | None = None
     trend_price: dict | None = None
+    audit_values: np.ndarray | None = None
+    audit_target_kendall: np.ndarray | None = None
+    audit_pairs: np.ndarray | None = None
+    audit_labels: list | None = None
 
 
 @dataclass
@@ -219,6 +223,10 @@ def reduce_scenarios(data: ModelData, scenarios: Q3ScenarioSet, k: int = 30,
             k=n, n_original=n, proxy_profits=np.zeros(n),
             demand_base={key: vals for key, vals in scenarios.demand_base.items()},
             trend_price={key: vals for key, vals in scenarios.trend_price.items()},
+            audit_values=scenarios.audit_values,
+            audit_target_kendall=scenarios.audit_target_kendall,
+            audit_pairs=scenarios.audit_pairs,
+            audit_labels=scenarios.audit_labels,
         ), ReductionAudit(
             sum_weights=1.0, min_weight=1.0/n, max_weight=1.0/n,
             zero_weight_count=0, min_profit_layer_reps=n,
@@ -347,50 +355,30 @@ def reduce_scenarios(data: ModelData, scenarios: Q3ScenarioSet, k: int = 30,
         proxy_profits=proxy_profits[medoid_arr],
         demand_base=reduced_demand_base,
         trend_price=reduced_trend_price,
+        audit_values=(None if scenarios.audit_values is None
+                      else scenarios.audit_values[medoid_arr]),
+        audit_target_kendall=scenarios.audit_target_kendall,
+        audit_pairs=scenarios.audit_pairs,
+        audit_labels=scenarios.audit_labels,
     )
 
-    # 8. 审计：因子相关结构保持度。
-    # 强相关对（|raw_r|>0.3）须保持<0.15差距；
-    # 弱相关对只检查方向一致性（不出现大幅反转）。
-    # 小样本（K=50）下弱相关方向必然存在虚假相关，属统计噪声。
+    # 8. 审计：与原始情景完全相同的实际边际对集，按情景权重计算
+    # 加权 Kendall，并直接对照目标 tau*。
     max_kendall_error = 0.0
     direction_ok = True
-    if scenarios.factor_scores is not None:
-        fs = np.asarray(scenarios.factor_scores, dtype=float)
-        cols = min(fs.shape[1], 16)
-        fs_used = fs[:, :cols]
-        # 原始均匀权重协方差
-        raw_w = np.full(n, 1.0 / n)
-        raw_mean = (fs_used * raw_w[:, None]).sum(axis=0)
-        raw_centered = fs_used - raw_mean[None, :]
-        raw_cov = (raw_centered.T * raw_w) @ raw_centered
-        # 缩减加权协方差
-        red_mean = (fs_used[medoid_arr] * weights[:, None]).sum(axis=0)
-        red_centered = fs_used[medoid_arr] - red_mean[None, :]
-        red_cov = (red_centered.T * weights) @ red_centered
-        # 归一化为相关矩阵
-        raw_d = np.sqrt(np.clip(np.diag(raw_cov), 1e-12, None))
-        red_d = np.sqrt(np.clip(np.diag(red_cov), 1e-12, None))
-        raw_corr = raw_cov / (raw_d[:, None] * raw_d[None, :])
-        red_corr = red_cov / (red_d[:, None] * red_d[None, :])
-        triu_idx = np.triu_indices(cols, k=1)
-        raw_vals = raw_corr[triu_idx]
-        red_vals = red_corr[triu_idx]
-        # 强相关对（|raw_r|>0.3）的差距作为max_kendall_error
-        strong_mask = np.abs(raw_vals) > 0.3
-        if np.any(strong_mask):
-            max_kendall_error = float(
-                np.abs(red_vals[strong_mask] - raw_vals[strong_mask]).max())
-        else:
-            max_kendall_error = 0.0
-        # 方向一致性：强相关对符号必须一致；
-        # 弱相关对若缩减后 |red_r|>0.5 视为异常放大。
-        if np.any(strong_mask):
-            sign_flip = (raw_vals[strong_mask] * red_vals[strong_mask]) < 0
-            direction_ok = not bool(np.any(sign_flip))
-        weak_amplify = (np.abs(raw_vals) < 0.1) & (np.abs(red_vals) > 0.5)
-        if np.any(weak_amplify):
-            direction_ok = False
+    if (scenarios.audit_values is not None
+            and scenarios.audit_target_kendall is not None
+            and scenarios.audit_pairs is not None):
+        av = np.asarray(scenarios.audit_values, dtype=float)[medoid_arr]
+        target = np.asarray(scenarios.audit_target_kendall, dtype=float)
+        errors = []
+        for a, b in np.asarray(scenarios.audit_pairs, dtype=int):
+            tau_hat = _weighted_kendall(av[:, a], av[:, b], weights)
+            tau_star = float(target[a, b])
+            errors.append(abs(tau_hat - tau_star))
+            if abs(tau_star) >= 0.10 and tau_hat * tau_star < 0:
+                direction_ok = False
+        max_kendall_error = max(errors, default=0.0)
     audit = ReductionAudit(
         sum_weights=float(weights.sum()),
         min_weight=float(weights.min()),

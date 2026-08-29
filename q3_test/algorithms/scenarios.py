@@ -40,6 +40,10 @@ class MarginalScenarioSet:
     n: int
     factor_scores: np.ndarray | None = None
     dependency_audit: object | None = None
+    audit_values: np.ndarray | None = None
+    audit_target_kendall: np.ndarray | None = None
+    audit_pairs: np.ndarray | None = None
+    audit_labels: list | None = None
 
 
 @dataclass
@@ -58,6 +62,10 @@ class Q3ScenarioSet:
     macro_factor: np.ndarray | None = None    # (N, 7)
     climate_factor: np.ndarray | None = None  # (N, 7)
     dependency_audit: object | None = None
+    audit_values: np.ndarray | None = None
+    audit_target_kendall: np.ndarray | None = None
+    audit_pairs: np.ndarray | None = None
+    audit_labels: list | None = None
 
     @property
     def k(self) -> int:
@@ -71,6 +79,7 @@ class ScenarioDependencyAudit:
     min_eigenvalue: float
     max_kendall_error: float
     pair_count: int
+    labels: list = field(default_factory=list)
 
 def _lhs_unit(n: int, lo: float = 0.0, hi: float = 1.0,
               seed: int = 2024) -> np.ndarray:
@@ -264,7 +273,8 @@ def correlate_marginals(marginals: MarginalScenarioSet,
         scale = np.sqrt(rng.chisquare(dependency_cfg.df, n)
                         / dependency_cfg.df)
 
-    audit_scores, audit_coeffs, audit_years = [], [], []
+    # 每个“作物组×随机维度×年份”冻结一个真实边际列作为代表。
+    audit_by_tag = {}
     for dict_name, key_dict in (("demand", marginals.demand),
                                 ("yield_", marginals.yield_),
                                 ("cost", marginals.cost),
@@ -292,34 +302,53 @@ def correlate_marginals(marginals: MarginalScenarioSet,
                  + np.sqrt(1.0 - row_sq) * rng.standard_normal(n)) / scale
             key_dict[key] = reorder_lhs_by_ranks(
                 key_dict[key].reshape(-1, 1), z.reshape(-1, 1)).ravel()
-            if len(audit_scores) < 24:
-                audit_scores.append(z)
-                audit_coeffs.append(coeff)
-                audit_years.append(ti)
+            tag = (group, dim, int(t))
+            if tag not in audit_by_tag:
+                audit_by_tag[tag] = (key, key_dict[key].copy(), coeff.copy(), ti)
 
     # 真实样本 Kendall 审计，不得硬编码通过。
     from scipy.stats import kendalltau
-    m = len(audit_scores)
+    tags = sorted(audit_by_tag)
+    audit_values = np.column_stack([audit_by_tag[tag][1] for tag in tags])
+    audit_coeffs = [audit_by_tag[tag][2] for tag in tags]
+    audit_years = [audit_by_tag[tag][3] for tag in tags]
+    audit_labels = [(tag[0], tag[1], tag[2], audit_by_tag[tag][0])
+                    for tag in tags]
+    m = len(tags)
     target_r = np.eye(m)
     max_err = 0.0
     pair_count = 0
-    # 预先固定的不重叠审计对，避免根据样本结果挑选。
-    audit_pairs = [(a, a + 1) for a in range(0, m - 1, 2)]
     for a in range(m):
         for b in range(a + 1, m):
             r_ab = float(audit_coeffs[a] @ audit_coeffs[b]) * rho ** abs(
                 audit_years[a] - audit_years[b])
             target_r[a, b] = target_r[b, a] = r_ab
+    target_tau = 2.0 / np.pi * np.arcsin(np.clip(target_r, -1.0, 1.0))
+    audit_pair_set = set()
+    for a in range(m):
+        for b in range(a + 1, m):
+            if abs(target_tau[a, b]) >= 0.10 - 1e-12:
+                audit_pair_set.add((a, b))
+            same_series = (tags[a][0] == tags[b][0]
+                           and tags[a][1] == tags[b][1]
+                           and abs(tags[a][2] - tags[b][2]) == 1)
+            if same_series:
+                audit_pair_set.add((a, b))
+    audit_pairs = sorted(audit_pair_set)
     for a, b in audit_pairs:
-        r_ab = target_r[a, b]
-        tau_target = 2.0 / np.pi * np.arcsin(np.clip(r_ab, -1.0, 1.0))
-        tau_sample = float(kendalltau(audit_scores[a], audit_scores[b]).statistic)
+        tau_target = target_tau[a, b]
+        tau_sample = float(kendalltau(audit_values[:, a],
+                                      audit_values[:, b]).statistic)
         max_err = max(max_err, abs(tau_sample - tau_target))
         pair_count += 1
     min_eig = float(np.linalg.eigvalsh(target_r).min()) if m else 1.0
     marginals.dependency_audit = ScenarioDependencyAudit(
         min_eigenvalue=min_eig, max_kendall_error=max_err,
-        pair_count=pair_count)
+        pair_count=pair_count, labels=audit_labels)
+    marginals.audit_values = audit_values
+    marginals.audit_target_kendall = target_tau
+    marginals.audit_pairs = np.asarray(audit_pairs, dtype=int).reshape(-1, 2)
+    marginals.audit_labels = audit_labels
     # 缩减特征仅保留公共因子，避免存储所有边际特异噪声。
     marginals.factor_scores = (g / scale[None, None, :]).transpose(2, 0, 1).reshape(n, -1)
 
@@ -372,6 +401,10 @@ def apply_market_interactions(marginals: MarginalScenarioSet,
         trend_price=marginals.trend_price, n=n,
         factor_scores=marginals.factor_scores,
         dependency_audit=marginals.dependency_audit,
+        audit_values=marginals.audit_values,
+        audit_target_kendall=marginals.audit_target_kendall,
+        audit_pairs=marginals.audit_pairs,
+        audit_labels=marginals.audit_labels,
     )
 
 

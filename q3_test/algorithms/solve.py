@@ -44,6 +44,9 @@ class SolveResult:
     x: np.ndarray
     has_incumbent: bool = False
     solver_status: str = "unknown"  # optimal|feasible_not_proven|time_limit_no_feasible|infeasible
+    objective_value: float = np.nan
+    objective_bound: float = np.nan
+    corrected_gap: float = np.nan
 
 
 @dataclass
@@ -141,11 +144,28 @@ def _solve_milp(model: StochModel, time_limit: float = 600.0,
     nodes = int(_nodes_raw) if _nodes_raw is not None else 0
     time_s = time.perf_counter() - started
 
+    is_max_stage = model.stage in ("risk", "expected")
+    objective_value = (-fun if is_max_stage else fun) if np.isfinite(fun) else np.nan
+    objective_bound = (-dual_bound if is_max_stage else dual_bound) \
+        if np.isfinite(dual_bound) else np.nan
+    if status == 0 and np.isfinite(objective_value):
+        corrected_gap = 0.0
+        if not np.isfinite(objective_bound):
+            objective_bound = objective_value
+    elif np.isfinite(objective_value) and np.isfinite(objective_bound):
+        corrected_gap = max(0.0, objective_bound - objective_value) / max(
+            abs(objective_value), 1e-9) if is_max_stage else max(
+            0.0, objective_value - objective_bound) / max(abs(objective_value), 1e-9)
+    else:
+        corrected_gap = np.nan
+
     return SolveResult(
         is_feasible=is_feasible, status=status, message=message,
         fun=fun, dual_bound=dual_bound, mip_gap=mip_gap_val, nodes=nodes,
         time=time_s, max_violation=max_violation, x=x,
         has_incumbent=has_incumbent, solver_status=solver_status,
+        objective_value=objective_value, objective_bound=objective_bound,
+        corrected_gap=corrected_gap,
     )
 
 

@@ -1,28 +1,28 @@
 # -*- coding: utf-8 -*-
-"""Q3 候选 Excel 原子回填 — result3_candidate.xlsx 的 OOXML 直接修改。
+"""Q3 结果展示工作簿的结构保持式OOXML导出。
 
 功能：
   复制自 q2_test/algorithms/export_ooxml.py 并适配 Q3。Q3 的 plan 结构包含
   b[j,t]（豆类前茬指示）与 w[j,i,t,s]（互补面积线性化变量），但只有 x
   （种植面积）被写入候选 Excel。模板仍是 doc/C题/附件3/result2.xlsx。
 
-  这是候选展示文件（outputs/q3/result3_candidate.xlsx），不是官方要求
+  这是结果展示文件（镜像默认写入 doc/results/q3/reproduced/result3.xlsx），不是官方要求
   的 result2.xlsx。官方提交文件不在本模块职责范围。
 
 使用方法：
     from algorithms.io_data import load_raw
     from algorithms.preprocess import preprocess
-    from algorithms.export_ooxml import patch_result3
+    from algorithms.export_ooxml import export_result3_workbook
 
     raw = load_raw()
     data = preprocess(raw)
-    max_diff = patch_result3(plan, data)   # 默认写到 paths.RESULT3_CANDIDATE
+    max_diff = export_result3_workbook(plan, data)
     print(f"回读最大误差: {max_diff}")
 
 命令行示例（已配置 PYTHONPATH 到 q3_test 根目录）：
-    python -c "from algorithms.export_ooxml import patch_result3; \
+    python -c "from algorithms.export_ooxml import export_result3_workbook; \
 import pickle; plan, data = pickle.load(open('plan.pkl','rb')); \
-print(patch_result3(plan, data))"
+print(export_result3_workbook(plan, data))"
 
 运行环境：Python 3.10+，依赖 openpyxl（只读校验）与标准库 zipfile/xml。
 """
@@ -159,10 +159,10 @@ def _without_sheet_data(xml_bytes: bytes) -> bytes:
     return ET.tostring(root, encoding="UTF-8")
 
 
-def patch_result3(plan: dict, data: ModelData,
-                  template_path: Path = paths.TEMPLATE2_PATH,
-                  output_path: Path = paths.RESULT3_CANDIDATE) -> float:
-    """Safely patch result3_candidate.xlsx from Q3 plan.
+def export_result3_workbook(plan: dict, data: ModelData,
+                            template_path: Path = paths.TEMPLATE2_PATH,
+                            output_path: Path = paths.RESULT3_PATH) -> float:
+    """安全生成问题3结果展示工作簿。
 
     Uses OOXML ZIP/XML direct manipulation (same as Q2):
       1. Copy template to candidate file

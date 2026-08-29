@@ -1,0 +1,5 @@
+scope,integer_structure,K,lambda,objective_value,objective_bound,corrected_gap,interpretation
+full_integer_discovery,free,3,0.5,32310872.795191847,42479817.450480565,0.314722066461849,全整数搜索未证明最优
+fixed_pattern_refine,fixed_q3_selected,30,0.0,32485065.0,32485065.0,0.0,固定整数结构内条件最优
+fixed_pattern_refine,fixed_q3_selected,30,0.5,32308752.0,32308752.0,0.0,固定整数结构内条件最优
+fixed_pattern_refine,fixed_q3_selected,30,1.0,32132438.0,32132438.0,0.0,固定整数结构内条件最优

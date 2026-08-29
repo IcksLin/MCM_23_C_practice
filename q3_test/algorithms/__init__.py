@@ -14,6 +14,6 @@
   risk              — CVaR复算 + 风险前沿资格 + 唯一方案选择
   evaluate          — Q2/Q3配对比较 + 四组消融
   validate          — 约束审计 + 相关/弹性/互补扩展检查
-  export_ooxml      — result3_candidate.xlsx原子回填
+  export_ooxml      — result3.xlsx结构保持式原子导出
   plots             — 9张逻辑图（原始3+过程3+结果3）
 """

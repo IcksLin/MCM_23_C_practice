@@ -13,7 +13,7 @@ Q2_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(Q2_ROOT))
 
 from algorithms import io_data, paths, preprocess
-from algorithms.export_ooxml import patch_result2
+from algorithms.export_ooxml import export_result2_workbook
 from algorithms.risk import compute_cvar, recompute_scenario_profits, select_unique_plan
 from algorithms.scenario_reduction import reduce_scenarios
 from algorithms.scenarios import generate_raw_scenarios
@@ -82,7 +82,7 @@ def main() -> int:
 
     with tempfile.TemporaryDirectory(dir=paths.LOG_DIR) as tmp:
         workbook = Path(tmp) / "result2_test.xlsx"
-        excel_audit = patch_result2(plan, data, paths.TEMPLATE2_PATH, workbook)
+        excel_audit = export_result2_workbook(plan, data, paths.TEMPLATE2_PATH, workbook)
         assert excel_audit["changed_sheet_count"] == len(data.years)
         assert excel_audit["nonzero_cell_count"] > 0
         audit = validate_solution(

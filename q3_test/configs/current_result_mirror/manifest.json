@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "problem": "q3",
+  "config": {
+    "path": "q3_test\\configs\\current_result_mirror\\config.yaml",
+    "sha256": "B996FCA7E71F9F93357062B0E0B348AA073F7F8BC307152F0D48BF907DB5FF2A"
+  },
+  "environment": {
+    "python": "3.13.5 | packaged by Anaconda, Inc. | (main, Jun 12 2025, 16:37:03) [MSC v.1929 64 bit (AMD64)]",
+    "platform": "Windows-11-10.0.26200-SP0"
+  },
+  "inputs": {
+    "doc/C题/附件1.xlsx": {
+      "sha256": "5E98BF5E1B247624397E57E74759DA293BD72005DAA0E2DF3710A0DAC0E9EF6A",
+      "bytes": 35874
+    },
+    "doc/C题/附件2.xlsx": {
+      "sha256": "869081A3AB47D3BF8D0955106B622AAF0FD2C068FADA7948DA69B20EBF1D00CE",
+      "bytes": 21976
+    },
+    "doc/C题/附件3/result2.xlsx": {
+      "sha256": "6A1BA9FC28D14D0A4A795E5F0B7261FB6E32165517AFEE62BCD1931ABA5BEE8A",
+      "bytes": 81836
+    },
+    "题目分析报告.md": {
+      "sha256": "C5DAE0CFEB81344F49E2D2D6ED704A7368C56AFD2D1A1B343609EC99499AFB17",
+      "bytes": 55897
+    },
+    "术语表格.md": {
+      "sha256": "ED61B2FC173DA28A0FF0010749454D5027C5F18099EF235DA412BFE6B5ABE61B",
+      "bytes": 12684
+    },
+    "q3_test/configs/current_result_mirror/frozen_inputs/q2_selected_plan.csv": {
+      "sha256": "ACAE51363E165A007A3EBAE76DE1470C226673003552AEEFEEFE4D37A1FFC491",
+      "bytes": 10635
+    },
+    "q3_test/configs/current_result_mirror/frozen_inputs/q3_discovery_plan.csv": {
+      "sha256": "D420BA93688C586BD55F1F99A1E7090F0DD80AC18703985E1CC579C6B285E6E4",
+      "bytes": 11584
+    }
+  },
+  "code": {
+    "q3_test/algorithms/__init__.py": "D43EBD66817D0AE1EB5E597AD192659E11E4E70E76BD3CBCD1D356A8C72AAF13",
+    "q3_test/algorithms/dependency.py": "B61154E10F241F27E669D26D7401945847ABD556A67FA7BFF6852419EAF2260F",
+    "q3_test/algorithms/elasticity.py": "4208269A2C9D73AB8FCEE5CD34B6C65C8E1EA31C5FA23BD233B5DEBF903D87E7",
+    "q3_test/algorithms/evaluate.py": "3A835A19D5B2405DC43E633CC6FA7326723A842EF468F28A670B783D563C634F",
+    "q3_test/algorithms/export_ooxml.py": "7CF5B20B0D673B8DE25AD3CB8F432F29E6C983A222DE185F491F158000B68F70",
+    "q3_test/algorithms/io_data.py": "B1E20E475FCE3EEC55E78F564906C65E0529CEE1EB86F0B5D77A7A82043B534E",
+    "q3_test/algorithms/model.py": "8486C7812016C3B73E8E8EE74D14E4B8FAAAE1520C2DF873976C48FB3FD9C406",
+    "q3_test/algorithms/paths.py": "D985C421BE2463690EF02A369AA5B3A406FFE2404825140F736182732C7A4D8D",
+    "q3_test/algorithms/plots.py": "3632CB941BEA51D2E8D62CDBBBB6B94475B6A5E79E6296F164408A1DA7782483",
+    "q3_test/algorithms/preprocess.py": "69839FF043E2D5F4B5BF5FF8EBB138BEE53B360D4E3F16A6AD818E2D119DF258",
+    "q3_test/algorithms/risk.py": "5E9654AC655D76AE61D4D485A9374AA5D9019FAF2E4DA45A06360EC93586777C",
+    "q3_test/algorithms/scenario_reduction.py": "DD553AF74BB747BED0621BBAC74CBC0A27082EE13176DAD9A131AF6435FFF2D7",
+    "q3_test/algorithms/scenarios.py": "BE77EE7A526777566C42CC607EAF02DB97188663DC5081925E60955ED586F5A3",
+    "q3_test/algorithms/solve.py": "4E1026FD33110DAFB78DC840A7700507ACCDB4474E17906EEA3ADDC89C137E41",
+    "q3_test/algorithms/validate.py": "69EF78F9F07CAB6DA35E07324FF6427A83CBCB1A9BD513ED675F6350B059B070",
+    "q3_test/scripts/run_q3.py": "22E48D04547DE00AADD16BF160A41C1DF3CE691F54E44D9A38F5CCCC4DDC2D23",
+    "scripts/run_with_config.py": "CDC2A63A2351E0AD54A12266A7DF98E6C0C050FBC3B14C7DF19A3F1F0A5E3723",
+    "run_problem.ps1": "8C2B9127FE18FEDF882CB678CC0AED17187F66B5636080BF2F60DF600BD6CAB0"
+  },
+  "reference_outputs": {
+    "doc/results/q3/audit_q3.csv": {
+      "sha256": "A22C6571AFF062E54AEA861E8FA81D388320D7EF481DAF2A40BE234AC1C33DAE",
+      "bytes": 621
+    },
+    "doc/results/q3/multiseed_oos_q3.csv": {
+      "sha256": "CBB76D8F2ECB41B2D8AA3FF096E407B93E9D59A2606DEB46C0882813164911F1",
+      "bytes": 919
+    },
+    "doc/results/q3/result3.xlsx": {
+      "sha256": "911ED70D8D9AB2748CC81AE95C05A70CA4CF7C3989C52E1C63C6EDA4FA2D61C2",
+      "bytes": 77318
+    },
+    "doc/results/q3/selected_plan_q3.csv": {
+      "sha256": "D420BA93688C586BD55F1F99A1E7090F0DD80AC18703985E1CC579C6B285E6E4",
+      "bytes": 11584
+    }
+  },
+  "command": ".\\run_problem.ps1 -ConfigPath q3_test\\configs\\current_result_mirror\\config.yaml",
+  "validation_command": ".\\run_problem.ps1 -ConfigPath q3_test\\configs\\current_result_mirror\\config.yaml -ValidateOnly",
+  "reproduction_level": "feasible_incumbent; timeout MIP may not be byte-identical"
+}

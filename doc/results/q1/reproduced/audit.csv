@@ -1,0 +1,3 @@
+scenario,Z,status,mip_gap,dual_bound,node_count,time,primary_certified,lex_status,lex_feasible,lex_certified,certified,max_area_viol,max_unsuitable_area,max_upper_link_viol,max_min_area_viol,max_Q_balance_viol,max_irrigated_area_viol,max_integrality_viol,monoculture_count,legume_min_slack,mode_conflicts,max_u_exceeds_D,max_u_exceeds_Q,profit_recompute_diff,excel_roundtrip_diff,feasible
+1,34229493.25,1,0.20237679584709992,-41156748.417404935,0,20.071345329284668,0,1,0,0,0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0,0.0,0,0.0,3.637978807091713e-12,0.0,0.0,True
+2,42570196.625,1,0.5016310865427973,-63924730.61233927,0,20.067410469055176,0,1,0,0,0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0,0.0,0,0.0,3.637978807091713e-12,0.0,0.0,True

@@ -1,0 +1,6 @@
+experiment,role,raw_N,K,solver_seconds,train_objective,gap,q3_oos_mean,q2_oos_mean,mean_gain,hard_max_violation,decision,reason
+seed2024_main,integer_discovery_then_fixed_refine,2000,3/30,600/180,32310872.80,0.31472206646,32369673.15,24359187.92,8010485.24,8.73e-11,promote,"当前OOS最高；农业硬约束通过；全整数仍未认证"
+seed2025_discovery,independent_integer_discovery,2000,3,900,30224353.50,0.4049,30266799.63,24358398.78,5908400.86,5.82e-11,reject,"训练目标、gap和OOS均差于seed2024"
+seed3024_oos,multiseed_evaluation,2000,,0,,,32368660.36,24359218.49,8009441.87,,pass,"Kendall=0.048664；配对正收益率100%"
+seed3025_oos,multiseed_evaluation,2000,,0,,,32367835.46,24358267.89,8009567.57,,pass,"Kendall=0.048384；配对正收益率100%"
+seed3026_oos_retry,multiseed_evaluation,5000,,0,,,32368971.26,24358837.19,8010134.07,,pass,"N=2000时Kendall=0.050959未过；扩大N=5000后0.024895"

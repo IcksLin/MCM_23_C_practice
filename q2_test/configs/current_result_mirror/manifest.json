@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "problem": "q2",
+  "config": {
+    "path": "q2_test\\configs\\current_result_mirror\\config.yaml",
+    "sha256": "278D8D86C2C3DA59A0B4247F319938956DFDCF4A547C68C667913297FA09385B"
+  },
+  "environment": {
+    "python": "3.13.5 | packaged by Anaconda, Inc. | (main, Jun 12 2025, 16:37:03) [MSC v.1929 64 bit (AMD64)]",
+    "platform": "Windows-11-10.0.26200-SP0"
+  },
+  "inputs": {
+    "doc/C题/附件1.xlsx": {
+      "sha256": "5E98BF5E1B247624397E57E74759DA293BD72005DAA0E2DF3710A0DAC0E9EF6A",
+      "bytes": 35874
+    },
+    "doc/C题/附件2.xlsx": {
+      "sha256": "869081A3AB47D3BF8D0955106B622AAF0FD2C068FADA7948DA69B20EBF1D00CE",
+      "bytes": 21976
+    },
+    "doc/C题/附件3/result2.xlsx": {
+      "sha256": "6A1BA9FC28D14D0A4A795E5F0B7261FB6E32165517AFEE62BCD1931ABA5BEE8A",
+      "bytes": 81836
+    },
+    "q2_test/configs/current_result_mirror/frozen_inputs/q1_result1_1.xlsx": {
+      "sha256": "55904B3AF7270456122B9C53001FAC383E8FD3811E3D9C02E4CA47436C2EE8A3",
+      "bytes": 81219
+    }
+  },
+  "code": {
+    "q2_test/algorithms/__init__.py": "641D9614191613EA438F1F22DE7F37A0271798389398CE1CF7A8BAF66DE672C6",
+    "q2_test/algorithms/export_ooxml.py": "BE41B5D4C5AED0E91F082291D1BBD7BB5D77AC1A90351EAA92A8B299FE17DEB4",
+    "q2_test/algorithms/io_data.py": "0FEBA87FB3DE6A8507BB2BE4FD2355E4B2759D3C2CB49CDCC48FAC999406054A",
+    "q2_test/algorithms/model.py": "80C6A701860D31C09C635C71EB469EA63DD27371F7331B62D2E5D34CFACF31FC",
+    "q2_test/algorithms/paths.py": "CB137CAC1E1F2A3AE1A38E63E32B490E5B7CCFC03D98F8A14CE7AC3E88AC9D3F",
+    "q2_test/algorithms/plots.py": "8C87646F0565F8D1E4EA4D9F844DD1431068AE24946239BABF3F15B7D6DAEE81",
+    "q2_test/algorithms/preprocess.py": "20F610DB057D78A34EBA083F0652841CD8426E8EB8D01DDD6E256B54754E1863",
+    "q2_test/algorithms/risk.py": "30F1358AEFC3E9C91C7FAB606C9593AF7257BE6EF1C1F104B17CD2C7149780BC",
+    "q2_test/algorithms/scenario_reduction.py": "F292932AA7A4A51E597678A701415CF733B61D1247508D9C88FA07938C3BD7FF",
+    "q2_test/algorithms/scenarios.py": "26A2928BB7D8B636F0DF6BB6C0B838582A41024DF572ACB1FA06067207DD541B",
+    "q2_test/algorithms/solve.py": "7309697C2F5F72DB6865C5B7085867244BDAB483FF94197E21F15A8F91F09EAF",
+    "q2_test/algorithms/validate.py": "9162669F566EF40D4E8CABB9B4A7CEEEA07D05406F53948CAD5C657FF480824D",
+    "q2_test/scripts/run_q2.py": "863B4EB9955F1985BF076D21770B1EB83BB2CD20EC582EDCFCB71BFAB60A00E7",
+    "scripts/run_with_config.py": "CDC2A63A2351E0AD54A12266A7DF98E6C0C050FBC3B14C7DF19A3F1F0A5E3723",
+    "run_problem.ps1": "8C2B9127FE18FEDF882CB678CC0AED17187F66B5636080BF2F60DF600BD6CAB0"
+  },
+  "reference_outputs": {
+    "doc/results/q2/audit_q2.csv": {
+      "sha256": "699571C4DB10987E68E2D1220C65820CA775CEBCF9F7999291B2BD03B70DC251",
+      "bytes": 988
+    },
+    "doc/results/q2/result2.xlsx": {
+      "sha256": "010705DDA385DA4448A5FDEA31E445E6AB22AB152B0FF1A874556C5DBF2EE93D",
+      "bytes": 77246
+    },
+    "doc/results/q2/selected_plan.csv": {
+      "sha256": "ACAE51363E165A007A3EBAE76DE1470C226673003552AEEFEEFE4D37A1FFC491",
+      "bytes": 10635
+    }
+  },
+  "command": ".\\run_problem.ps1 -ConfigPath q2_test\\configs\\current_result_mirror\\config.yaml",
+  "validation_command": ".\\run_problem.ps1 -ConfigPath q2_test\\configs\\current_result_mirror\\config.yaml -ValidateOnly",
+  "reproduction_level": "feasible_incumbent; timeout MIP may not be byte-identical"
+}

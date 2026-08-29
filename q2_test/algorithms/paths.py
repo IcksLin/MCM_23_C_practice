@@ -57,6 +57,41 @@ SCENARIO_CACHE = Q2_OUT_DIR / "scenarios_raw.parquet"  # 原始情景缓存
 DOC_DIR = Q2_ROOT / "doc"
 
 
+def configure_from_config(config: dict) -> None:
+    """应用Config中的独立输入和输出路径。"""
+    global Q1_RESULT1_1, Q1_RESULT1_2
+    global OUT_DIR, Q2_OUT_DIR, FIG_DIR, LOG_DIR, RESULT2_PATH
+    global SCENARIO_SUMMARY, RISK_FRONTIER_CSV, OUT_OF_SAMPLE_PROFITS
+    global OUT_OF_SAMPLE_METRICS, AUDIT_PATH, REPRO_PATH, SELECTED_PLAN_CSV
+    global SCENARIO_CACHE, DOC_DIR
+    inputs = config.get("inputs", {})
+    artifacts = config.get("artifacts", {})
+    if inputs.get("q1_baseline"):
+        p = Path(inputs["q1_baseline"])
+        Q1_RESULT1_1 = (p if p.is_absolute() else PROJECT_ROOT / p).resolve()
+    output = artifacts.get("output_dir")
+    if not output:
+        return
+    root = Path(output)
+    if not root.is_absolute():
+        root = PROJECT_ROOT / root
+    root = root.resolve()
+    protected = (C_DIR / "附件3").resolve()
+    if root == protected or protected in root.parents:
+        raise ValueError("输出目录不得位于题目原始附件目录")
+    OUT_DIR = Q2_OUT_DIR = root
+    FIG_DIR = root / "figures"; LOG_DIR = root / "logs"
+    RESULT2_PATH = root / "result2.xlsx"
+    SCENARIO_SUMMARY = root / "scenario_summary.csv"
+    RISK_FRONTIER_CSV = root / "risk_frontier.csv"
+    OUT_OF_SAMPLE_PROFITS = root / "out_of_sample_profits.csv"
+    OUT_OF_SAMPLE_METRICS = root / "out_of_sample_metrics.csv"
+    AUDIT_PATH = root / "audit_q2.csv"; REPRO_PATH = root / "repro_q2.json"
+    SELECTED_PLAN_CSV = root / "selected_plan.csv"
+    SCENARIO_CACHE = root / "scenarios_raw.parquet"
+    DOC_DIR = root
+
+
 def ensure_dirs() -> None:
     """创建所有输出目录（如果不存在）。"""
     for d in (OUT_DIR, Q2_OUT_DIR, FIG_DIR, LOG_DIR, DOC_DIR):

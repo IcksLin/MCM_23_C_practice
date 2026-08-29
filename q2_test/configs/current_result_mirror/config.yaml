@@ -1,0 +1,37 @@
+schema_version: 1
+problem: q2
+description: 问题2当前未认证可行基线镜像
+seed: 2024
+distribution: uniform
+raw_scenarios: 1000
+reduced_scenarios: 30
+out_sample: 5000
+beta: 0.90
+lambda_grid: "0:1:0.1"
+eta: 0.5
+mip_gap: 0.001
+time_limit: 600.0
+figures: false
+reports: true
+allow_uncertified: true
+inputs:
+  attachment1: doc/C题/附件1.xlsx
+  attachment2: doc/C题/附件2.xlsx
+  template: doc/C题/附件3/result2.xlsx
+  q1_baseline: q2_test/configs/current_result_mirror/frozen_inputs/q1_result1_1.xlsx
+input_hashes:
+  doc/C题/附件1.xlsx: 5E98BF5E1B247624397E57E74759DA293BD72005DAA0E2DF3710A0DAC0E9EF6A
+  doc/C题/附件2.xlsx: 869081A3AB47D3BF8D0955106B622AAF0FD2C068FADA7948DA69B20EBF1D00CE
+  doc/C题/附件3/result2.xlsx: 6A1BA9FC28D14D0A4A795E5F0B7261FB6E32165517AFEE62BCD1931ABA5BEE8A
+  q2_test/configs/current_result_mirror/frozen_inputs/q1_result1_1.xlsx: 55904B3AF7270456122B9C53001FAC383E8FD3811E3D9C02E4CA47436C2EE8A3
+uncertainty_contract:
+  wheat_corn_growth: [0.05, 0.10]
+  other_demand_shock: [-0.05, 0.05]
+  yield_shock: [-0.10, 0.10]
+  annual_cost_growth: 0.05
+  annual_vegetable_price_growth: 0.05
+  annual_morel_price_decline: 0.05
+  mushroom_price_decline: [0.01, 0.05]
+artifacts:
+  output_dir: doc/results/q2/reproduced
+  reference_dir: doc/results/q2
