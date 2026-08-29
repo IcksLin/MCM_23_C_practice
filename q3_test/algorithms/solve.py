@@ -256,17 +256,8 @@ def solve_lexicographic(data: ModelData, scenarios: ReducedScenarioSet,
       dict with: z_star, e_star, n_activations, model, result, solution,
                  stage1/2/3_feasible, lex_complete, result1/2/3, eps_z/e
     """
-    # 检查点恢复
-    if ckpt_dir and config_hash:
-        ckpt = _load_checkpoint(ckpt_dir, risk_lambda, config_hash)
-        if ckpt and ckpt.get("lex_complete"):
-            return {"z_star": ckpt["z_star"], "e_star": ckpt["e_star"],
-                    "n_activations": ckpt["n_activations"],
-                    "model": None, "result": None, "solution": None,
-                    "stage1_feasible": True, "stage2_feasible": True,
-                    "stage3_feasible": True, "lex_complete": True,
-                    "restored_from_checkpoint": True,
-                    "eps_z": eps_z, "eps_e": eps_e}
+    # 旧版 JSON 检查点不含决策向量，恢复后无法复算/导出。在 NPZ 方案
+    # 检查点实现前，只写进度记录，不将其当作可恢复解。
 
     # Stage 1: risk
     m1, r1, z_star = solve_risk_stage(

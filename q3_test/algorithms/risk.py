@@ -252,7 +252,7 @@ def _qualifies_for_frontier(point: dict) -> bool:
     """
     if not point.get("lex_complete", False):
         return False
-    status = point.get("status", "unknown")
+    status = point.get("status", point.get("solver_status", "unknown"))
     # 只有 status 为 optimal 或 feasible_not_proven 才算有有限 incumbent
     if status not in ("optimal", "feasible_not_proven"):
         return False
@@ -378,9 +378,13 @@ def select_unique_plan(frontier_points: list) -> dict:
     max_dist = float(dists.max())
     max_idx = int(np.argmax(dists))
 
-    # 统一破同分键: lambda 升序, 期望利润降序, 启用次数升序
-    def _sort_key(p: dict):
+    # 无膝点回退按较小 lambda；膝点距离并列按较大 lambda。
+    def _fallback_key(p: dict):
         return (p["lambda"], -p.get("expected_profit", 0.0),
+                p.get("n_activations", 0))
+
+    def _knee_tie_key(p: dict):
+        return (-p["lambda"], -p.get("expected_profit", 0.0),
                 p.get("n_activations", 0))
 
     # 5. 膝点分支
@@ -390,7 +394,7 @@ def select_unique_plan(frontier_points: list) -> dict:
             selected = frontier[max_idx]
         else:
             tied_pts = [frontier[i] for i in tied]
-            tied_pts.sort(key=_sort_key)
+            tied_pts.sort(key=_knee_tie_key)
             selected = tied_pts[0]
     else:
         # 6. 无明显膝点: CVaR >= 99% 最大 CVaR 的候选
@@ -400,7 +404,7 @@ def select_unique_plan(frontier_points: list) -> dict:
         if not candidates:
             # 退化: 取最大 CVaR 点
             candidates = [frontier[int(np.argmax(cv))]]
-        candidates.sort(key=_sort_key)
+        candidates.sort(key=_fallback_key)
         selected = candidates[0]
 
     result = dict(selected)

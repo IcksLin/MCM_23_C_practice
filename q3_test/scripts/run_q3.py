@@ -32,6 +32,8 @@ import time
 import hashlib
 import traceback
 from pathlib import Path
+import numpy as np
+import pandas as pd
 
 # 确保algorithms包可导入
 Q3_ROOT = Path(__file__).resolve().parent.parent
@@ -44,7 +46,10 @@ from algorithms.preprocess import preprocess, ModelData
 from algorithms.scenarios import generate_raw_scenarios
 from algorithms.scenario_reduction import reduce_scenarios
 from algorithms.solve import solve_lexicographic, detect_solver, extract_solution
-from algorithms.risk import recompute_scenario_profits, compute_cvar, select_unique_plan
+from algorithms.risk import (recompute_scenario_profits, compute_cvar,
+                             select_unique_plan, check_frontier_complete)
+from algorithms.dependency import DependencyConfig, BASE_LOADINGS
+from algorithms.elasticity import ElasticityConfig, build_elasticity_matrix, audit_elasticity
 from algorithms.validate import validate_solution
 from algorithms.export_ooxml import patch_result3
 
@@ -107,21 +112,42 @@ def main() -> int:
     config = {}
     if args.config:
         config = _load_config(Path(args.config))
-    seed = config.get("seed", args.seed)
-    raw_n = config.get("raw_scenarios", args.raw_scenarios)
-    K = config.get("reduced_scenarios", args.reduced_scenarios)
-    out_sample = config.get("out_sample", args.out_sample)
-    beta = config.get("beta", args.beta)
-    eta = config.get("eta", args.eta)
-    gamma = config.get("complementarity", {}).get("gamma", args.gamma)
-    time_limit = config.get("solver", {}).get("time_limit", args.time_limit)
-    mip_gap = config.get("solver", {}).get("mip_gap", args.mip_gap)
+    argv = set(sys.argv[1:])
+    def choose(flag, cli_value, cfg_value):
+        return cli_value if flag in argv else cfg_value
+    seed = choose("--seed", args.seed, config.get("seed", args.seed))
+    raw_n = choose("--raw-scenarios", args.raw_scenarios,
+                   config.get("raw_scenarios", args.raw_scenarios))
+    K = choose("--reduced-scenarios", args.reduced_scenarios,
+               config.get("reduced_scenarios", args.reduced_scenarios))
+    out_sample = choose("--out-sample", args.out_sample,
+                        config.get("out_sample", args.out_sample))
+    beta = choose("--beta", args.beta, config.get("beta", args.beta))
+    eta = choose("--eta", args.eta, config.get("eta", args.eta))
+    gamma = choose("--gamma", args.gamma,
+                   config.get("complementarity", {}).get("gamma", args.gamma))
+    time_limit = choose("--time-limit", args.time_limit,
+                        config.get("solver", {}).get("time_limit", args.time_limit))
+    mip_gap = choose("--mip-gap", args.mip_gap,
+                     config.get("solver", {}).get("mip_gap", args.mip_gap))
 
     # lambda网格
-    parts = args.lambda_grid.split(":")
-    lam_start, lam_stop, lam_step = float(parts[0]), float(parts[1]), float(parts[2])
-    lambdas = [round(lam_start + i * lam_step, 4)
-               for i in range(int((lam_stop - lam_start) / lam_step + 0.5) + 1)]
+    if "lambda_grid" in config and "--lambda-grid" not in argv:
+        lambdas = [float(v) for v in config["lambda_grid"]]
+    else:
+        parts = args.lambda_grid.split(":")
+        lam_start, lam_stop, lam_step = map(float, parts)
+        lambdas = [round(lam_start + i * lam_step, 4)
+                   for i in range(int((lam_stop - lam_start) / lam_step + 0.5) + 1)]
+    distribution = config.get("distribution", "uniform")
+    dep_raw = config.get("dependency", {})
+    dep_cfg = DependencyConfig(
+        df=float(dep_raw.get("df", 5)),
+        correlation_scale=float(dep_raw.get("correlation_scale", 1.0)),
+        temporal_rho=float(dep_raw.get("temporal_rho", 0.5)),
+        loadings=BASE_LOADINGS,
+    )
+    ela_cfg = ElasticityConfig(scale=float(config.get("elasticity", {}).get("scale", 1.0)))
 
     config_hash = _config_hash({
         "seed": seed, "raw_n": raw_n, "K": K, "beta": beta,
@@ -163,7 +189,10 @@ def main() -> int:
 
         # ---- 5. 情景生成 ----
         _print_progress(20, f"Q3情景生成 (N={raw_n})")
-        scenarios = generate_raw_scenarios(data, n=raw_n, seed=seed)
+        scenarios = generate_raw_scenarios(
+            data, n=raw_n, seed=seed, distribution=distribution,
+            dependency_cfg=dep_cfg, elasticity_cfg=ela_cfg)
+        elasticity_audit = audit_elasticity(build_elasticity_matrix(data, config=ela_cfg), data)
 
         # ---- 6. 情景缩减 ----
         _print_progress(30, f"PAM缩减 (K={K})")
@@ -173,6 +202,12 @@ def main() -> int:
         print(f"  权重和: {red_audit.sum_weights:.6f}")
         print(f"  最小权重: {red_audit.min_weight:.6f}")
         print(f"  尾部代表数: {red_audit.min_profit_layer_reps}")
+        print(f"  原始Kendall最大误差: {scenarios.dependency_audit.max_kendall_error:.4f}")
+        print(f"  缩减Kendall最大误差: {red_audit.max_kendall_error:.4f}")
+        if (scenarios.dependency_audit.max_kendall_error > 0.05
+                or red_audit.max_kendall_error > 0.15
+                or not red_audit.kendall_direction_consistent):
+            raise RuntimeError("相关情景原始/缩减 Kendall 门禁未通过")
 
         # ---- 7. 风险前沿 ----
         _print_progress(35, "风险前沿求解")
@@ -216,6 +251,7 @@ def main() -> int:
                     "cvar": cvar,
                     "n_activations": n_act,
                     "solver_status": solver_status,
+                    "status": solver_status,
                     "mip_gap": mip_gap_val,
                     "lex_complete": lex_complete,
                     "result": final_result,
@@ -231,6 +267,7 @@ def main() -> int:
                     "cvar": None,
                     "n_activations": None,
                     "solver_status": solver_status,
+                    "status": solver_status,
                     "mip_gap": float("nan"),
                     "lex_complete": False,
                     "result": final_result,
@@ -241,6 +278,9 @@ def main() -> int:
         # ---- 8. 方案选择 ----
         _print_progress(78, "唯一方案选择")
         selected = select_unique_plan(frontier_points)
+        if selected is None:
+            print("  风险前沿无具备资格的点（需有限可行解且三级字典序完成）")
+            return 3
         sel_lam = selected.get("selected_lambda")
         print(f"  选中 lambda: {sel_lam}")
 
@@ -256,25 +296,29 @@ def main() -> int:
 
         # ---- 9. 样本外评估 ----
         _print_progress(82, f"样本外评估 (N={out_sample})")
-        oos_scenarios = generate_raw_scenarios(data, n=out_sample,
-                                                seed=seed + 999)
-        oos_reduced, _ = reduce_scenarios(data, oos_scenarios, k=K,
-                                           baseline_plan=plan_x_q2,
-                                           gamma=gamma, seed=seed + 999)
+        oos_scenarios = generate_raw_scenarios(
+            data, n=out_sample, seed=seed + 999, distribution=distribution,
+            dependency_cfg=dep_cfg, elasticity_cfg=ela_cfg)
         q3_profits = recompute_scenario_profits(
-            sel_point["solution"], data, oos_reduced, gamma)
+            sel_point["solution"], data, oos_scenarios, gamma)
         q2_profits = recompute_scenario_profits(
             {"x": plan_x_q2, "y": {}, "r": {}, "b": {}, "w": {}},
-            data, oos_reduced, gamma)
+            data, oos_scenarios, gamma)
+        sel_point["solution"]["paired_sample_count"] = int(out_sample)
         print(f"  Q3样本外均值: {np.mean(q3_profits):,.0f}")
         print(f"  Q2样本外均值: {np.mean(q2_profits):,.0f}")
         print(f"  差异: {np.mean(q3_profits) - np.mean(q2_profits):,.0f}")
 
         # ---- 10. 约束审计 ----
         _print_progress(88, "约束审计")
+        frontier_complete = check_frontier_complete(frontier_points, tuple(lambdas))
         audit = validate_solution(
             sel_point["solution"], sel_point["result"].model if sel_point.get("result") else None,
             data, reduced, beta=beta, gamma=gamma,
+            frontier_complete=frontier_complete,
+            selected_certified=bool(sel_point.get("lex_complete")),
+            elasticity_audit=elasticity_audit,
+            dependency_audit=scenarios.dependency_audit,
         )
         print(f"  feasible={audit.get('feasible', False)}")
         print(f"  max_violation={audit.get('max_violation', 0):.2e}")
@@ -290,6 +334,17 @@ def main() -> int:
         except Exception as e:
             print(f"  Excel导出失败: {e}")
             readback_diff = float("inf")
+
+        # 可机读核心产物（不依赖图表/报告开关）
+        pd.DataFrame([{k: v for k, v in p.items()
+                       if k not in ("result", "solution")} for p in frontier_points]).to_csv(
+            paths.RISK_FRONTIER_Q3, index=False, encoding="utf-8-sig")
+        pd.DataFrame({"scenario": np.arange(out_sample),
+                      "q2_profit": q2_profits,
+                      "q3_profit": q3_profits,
+                      "difference": q3_profits - q2_profits}).to_csv(
+            paths.PAIRED_PROFITS_Q2_Q3, index=False, encoding="utf-8-sig")
+        pd.DataFrame([audit]).to_csv(paths.AUDIT_Q3, index=False, encoding="utf-8-sig")
 
         # ---- 12. 图表 ----
         if args.figures:
@@ -324,7 +379,7 @@ def main() -> int:
             "config_hash": config_hash,
             "solver_backend": caps.backend,
             "supports_mip_start": caps.supports_mip_start,
-            "frontier_complete": all(p.get("lex_complete") for p in frontier_points if p.get("z_lambda")),
+            "frontier_complete": frontier_complete,
             "selected_certified": audit.get("certified", False),
             "q3_mean_profit": float(np.mean(q3_profits)),
             "q2_mean_profit": float(np.mean(q2_profits)),

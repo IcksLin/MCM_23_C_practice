@@ -372,8 +372,8 @@ def build_q3_model(data: ModelData, scenarios: ReducedScenarioSet,
                     # b >= each legume y
                     for yk in legume_y_keys:
                         r_ub += 1
-                        _add(r_ub, bk, 1.0, ub_rows, ub_cols, ub_vals)
-                        _add(r_ub, yk, -1.0, ub_rows, ub_cols, ub_vals)
+                        _add(r_ub, yk, 1.0, ub_rows, ub_cols, ub_vals)
+                        _add(r_ub, bk, -1.0, ub_rows, ub_cols, ub_vals)
                         b_ub_list.append(0.0)
                     # b <= sum(legume y's): b - sum(y) <= 0
                     r_ub += 1
@@ -404,11 +404,11 @@ def build_q3_model(data: ModelData, scenarios: ReducedScenarioSet,
         _add(r_ub, wk, 1.0, ub_rows, ub_cols, ub_vals)
         _add(r_ub, bk, -Aj, ub_rows, ub_cols, ub_vals)
         b_ub_list.append(0.0)
-        # w >= x - A_j * (1 - b) -> -w + x - A_j*b <= A_j
+        # w >= x - A_j * (1 - b) -> -w + x + A_j*b <= A_j
         r_ub += 1
         _add(r_ub, wk, -1.0, ub_rows, ub_cols, ub_vals)
         _add(r_ub, xk, 1.0, ub_rows, ub_cols, ub_vals)
-        _add(r_ub, bk, -Aj, ub_rows, ub_cols, ub_vals)
+        _add(r_ub, bk, Aj, ub_rows, ub_cols, ub_vals)
         b_ub_list.append(Aj)
 
     # === 情景约束 ===

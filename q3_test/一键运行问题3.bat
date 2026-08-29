@@ -6,16 +6,18 @@ echo ============================================================
 echo  Q3 一键运行 — 相关性·替代性·互补性
 echo ============================================================
 
-REM 探测Python
-where python >nul 2>&1
-if %errorlevel% neq 0 (
-    echo [ERROR] 未找到python，请确认Python已安装并在PATH中
+REM 优先选择已验证具备 numpy/pandas/scipy/openpyxl/yaml 的环境
+set "PYTHON_EXE=E:\anaconda\python.exe"
+if not exist "%PYTHON_EXE%" set "PYTHON_EXE=python"
+"%PYTHON_EXE%" -c "import numpy,pandas,scipy,openpyxl,yaml" >nul 2>&1
+if errorlevel 1 (
+    echo [ERROR] Python环境缺少 numpy pandas scipy openpyxl 或 pyyaml
     pause
     exit /b 1
 )
 
 REM 运行Q3主程序
-python scripts\run_q3.py --config configs\q3_default.yaml --figures --reports
+"%PYTHON_EXE%" -u scripts\run_q3.py --config configs\q3_default.yaml --figures --reports
 
 REM 透传退出码
 set EXITCODE=%errorlevel%

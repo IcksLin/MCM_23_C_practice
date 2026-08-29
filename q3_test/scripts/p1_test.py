@@ -22,6 +22,9 @@ from algorithms.paths import ensure_dirs
 from algorithms.io_data import load_inputs, load_q2_baseline, verify_input_hashes
 from algorithms.preprocess import preprocess, ModelData, LEGUME_CODES
 from algorithms.scenarios import generate_raw_scenarios
+from algorithms.dependency import DependencyConfig, BASE_LOADINGS
+from algorithms.elasticity import (ElasticityConfig, build_elasticity_matrix,
+                                   audit_elasticity)
 from algorithms.scenario_reduction import reduce_scenarios
 from algorithms.solve import solve_lexicographic, extract_solution
 from algorithms.risk import recompute_scenario_profits, compute_cvar
@@ -69,9 +72,13 @@ def main() -> int:
     _assert(len(plan_x_q2) > 0, "Q2方案非空")
 
     # ---- 4. LHS边际生成 ----
-    print("\n[4] LHS边际生成 (N=200)")
-    N = 200
-    scenarios = generate_raw_scenarios(data, n=N, seed=2024)
+    print("\n[4] LHS边际生成 (N=30)")
+    N = 30
+    dep_cfg = DependencyConfig(5, 1.0, 0.5, BASE_LOADINGS)
+    ela_cfg = ElasticityConfig(scale=1.0)
+    scenarios = generate_raw_scenarios(
+        data, n=N, seed=2024, dependency_cfg=dep_cfg,
+        elasticity_cfg=ela_cfg)
     _assert(scenarios.n == N, f"情景数={scenarios.n}")
 
     # 验证LHS分层
@@ -84,8 +91,8 @@ def main() -> int:
             break
 
     # ---- 5. 情景缩减 ----
-    print("\n[5] PAM缩减 (K=5)")
-    K = 5
+    print("\n[5] PAM缩减 (K=3)")
+    K = 3
     reduced, red_audit = reduce_scenarios(data, scenarios, k=K,
                                            baseline_plan=plan_x_q2,
                                            gamma=0.03, seed=2024)
@@ -98,7 +105,7 @@ def main() -> int:
     print("\n[6] λ=0 三级字典序求解")
     result = solve_lexicographic(
         data, reduced, beta=0.90, risk_lambda=0.0,
-        eta=0.5, gamma=0.03, time_limit=30, mip_gap=0.05,
+        eta=0.5, gamma=0.03, time_limit=45, mip_gap=0.05,
     )
     _assert(result.get("z_star") is not None, f"Z*={result.get('z_star')}")
     _assert(result.get("stage1_feasible", False), "Stage 1可行")
@@ -109,11 +116,16 @@ def main() -> int:
 
     # ---- 7. 销量约束验证 ----
     print("\n[7] 销量约束验证")
-    # u <= Q 且 u <= D
     model = result.get("model")
-    if model is not None:
-        _assert(True, "模型存在")
-    _assert(True, "销量约束通过")
+    _assert(model is not None, "模型存在")
+    max_sales_violation = 0.0
+    for (omega, i, t, s), u_val in sol["u"].items():
+        q_val = sol["Q"][(omega, i, t, s)]
+        d_val = reduced.demand[(i, t, s)][omega]
+        max_sales_violation = max(max_sales_violation, u_val-q_val,
+                                  u_val-d_val, 0.0)
+    _assert(max_sales_violation <= 1e-6,
+            f"销量约束最大违反={max_sales_violation:.2e}")
 
     # ---- 8. w=x*b验证 ----
     print("\n[8] 互补变量w=x*b验证")
@@ -127,7 +139,7 @@ def main() -> int:
             else:
                 diff = abs(w_val)
             max_diff = max(max_diff, diff)
-        _assert(max_diff < 1.0, f"max|w-x*b|={max_diff:.6f} (容差放宽: 30s+5%gap)")
+        _assert(max_diff <= 1e-6, f"max|w-x*b|={max_diff:.6e}")
     else:
         _assert(True, "w/b变量存在（简化验证）")
 
@@ -147,32 +159,19 @@ def main() -> int:
     print("\n[10] 约束审计")
     audit = validate_solution(
         sol, model, data, reduced, beta=0.90, gamma=0.03,
+        dependency_audit=scenarios.dependency_audit,
+        elasticity_audit=audit_elasticity(
+            build_elasticity_matrix(data, config=ela_cfg), data),
     )
     mv = audit.get("max_violation", 1)
     print(f"  max_violation={mv:.2e}")
-    # P1测试使用30s+5%gap，放宽容差到1.0
-    _assert(mv < 2.0, f"max_violation={mv:.2e} (P1容差: 30s+5%gap)")
+    _assert(mv <= 1e-4, f"max_violation={mv:.2e}")
 
     # ---- 11. OOXML输出 ----
     print("\n[11] OOXML候选输出")
-    try:
-        out_path = paths.Q3_OUT_DIR / "p1_test_candidate.xlsx"
-        diff = patch_result3(sol, data, paths.TEMPLATE2_PATH, out_path)
-        _assert(diff < 1e-3, f"回读差={diff:.2e}")
-    except Exception as e:
-        print(f"  跳过OOXML: {e}")
-
-    # ---- 12. λ=1验证 ----
-    print("\n[12] λ=1 三级字典序求解")
-    result_l1 = solve_lexicographic(
-        data, reduced, beta=0.90, risk_lambda=1.0,
-        eta=0.5, gamma=0.03, time_limit=30, mip_gap=0.05,
-    )
-    # λ=1可能因时间限制无解，不强制要求
-    if result_l1.get("z_star") is not None:
-        _assert(True, f"λ=1有解 Z*={result_l1['z_star']:.0f}")
-    else:
-        print(f"  λ=1无解（时间限制内），状态: {result_l1.get('result', {}).solver_status if result_l1.get('result') else 'unknown'}")
+    out_path = paths.Q3_OUT_DIR / "p1_test_candidate.xlsx"
+    diff = patch_result3(sol, data, paths.TEMPLATE2_PATH, out_path)
+    _assert(diff < 1e-6, f"回读差={diff:.2e}")
 
     # ---- 完成 ----
     print("\n" + "=" * 60)

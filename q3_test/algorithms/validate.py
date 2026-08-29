@@ -127,7 +127,8 @@ def _count_marginal_range_violations(scenarios: ReducedScenarioSet,
             continue
         is_cereal = i in _DEMAND_CEREAL_CODES
         for t_idx, t in enumerate(years):
-            vals = scenarios.demand.get((i, t, s), np.zeros(n))
+            base_dict = getattr(scenarios, "demand_base", None) or scenarios.demand
+            vals = base_dict.get((i, t, s), np.zeros(n))
             if is_cereal:
                 lo = d_base * (1.0 + _DEMAND_GROWTH_LO) ** (t_idx + 1)
                 hi = d_base * (1.0 + _DEMAND_GROWTH_HI) ** (t_idx + 1)
@@ -335,10 +336,7 @@ def validate_solution(plan: dict, model: StochModel, data: ModelData,
     out["production_sales_balance"] = max(max_q_bal, max_u_q, max_u_d)
 
     # 8. CVaR复算（含互补增益）
-    if w and gamma > 0:
-        profits = _recompute_q3_profits(plan, scenarios, data, gamma)
-    else:
-        profits = recompute_scenario_profits(plan["x"], scenarios, data)
+    profits = _recompute_q3_profits(plan, scenarios, data, gamma)
     weights = scenarios.weights
     e_pi_recomp = float(np.average(profits, weights=weights))
     cvar_recomp = compute_cvar(profits, weights, beta)
@@ -404,10 +402,10 @@ def validate_solution(plan: dict, model: StochModel, data: ModelData,
     dep = dependency_audit
     out["min_latent_eigenvalue"] = (
         float(dep.min_eigenvalue) if dep is not None
-        and hasattr(dep, "min_eigenvalue") else 1.0)
+        and hasattr(dep, "min_eigenvalue") else float("-inf"))
     out["max_kendall_error"] = (
         float(dep.max_kendall_error) if dep is not None
-        and hasattr(dep, "max_kendall_error") else 0.0)
+        and hasattr(dep, "max_kendall_error") else float("inf"))
 
     # 13. 边际范围违反计数
     out["marginal_range_violations"] = _count_marginal_range_violations(
@@ -439,8 +437,8 @@ def validate_solution(plan: dict, model: StochModel, data: ModelData,
         out["integrality"],
         out["w_product_diff"],
         float(out["complementarity_activation"] > 0),
-        float(out["min_latent_eigenvalue"] < -1e-10),
-        out["max_kendall_error"],
+        max(0.0, -out["min_latent_eigenvalue"] - 1e-10),
+        max(0.0, out["max_kendall_error"] - 0.05),
         float(out["marginal_range_violations"] > 0),
         float(out["elasticity_sign_violations"] > 0),
         float(out["elasticity_row_stability_violations"] > 0),

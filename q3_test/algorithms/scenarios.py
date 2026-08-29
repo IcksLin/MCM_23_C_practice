@@ -38,6 +38,8 @@ class MarginalScenarioSet:
     price: dict           # (i,t,s) -> array(N,)
     trend_price: dict     # (i,t,s) -> array(N,)  Q2确定趋势价格
     n: int
+    factor_scores: np.ndarray | None = None
+    dependency_audit: object | None = None
 
 
 @dataclass
@@ -55,7 +57,20 @@ class Q3ScenarioSet:
     factor_scores: np.ndarray | None = None  # (N, n_dims*7)
     macro_factor: np.ndarray | None = None    # (N, 7)
     climate_factor: np.ndarray | None = None  # (N, 7)
+    dependency_audit: object | None = None
 
+    @property
+    def k(self) -> int:
+        """兼容固定方案评估接口；原始样本外情景不经缩减。"""
+        return self.n
+
+
+@dataclass
+class ScenarioDependencyAudit:
+    """原始情景相关门禁（在预先固定的小型审计对集上计算）。"""
+    min_eigenvalue: float
+    max_kendall_error: float
+    pair_count: int
 
 def _lhs_unit(n: int, lo: float = 0.0, hi: float = 1.0,
               seed: int = 2024) -> np.ndarray:
@@ -112,14 +127,13 @@ def generate_q2_marginals(data: ModelData, n: int = 1000,
     for (i, s) in is_pairs:
         d_base = data.D.get((i, s), 0.0)
         is_cereal = i in (6, 7)  # 小麦=6, 玉米=7
+        cereal_path = np.full(n, d_base)
         for t_idx, t in enumerate(years):
             if is_cereal:
                 # 年增长率5%-10%，逐年递推
                 growth_rates = _lhs_sample(n, 0.05, 0.10, seed + i * 100 + t, distribution)
-                d_vals = np.full(n, d_base)
-                for k in range(t_idx + 1):
-                    d_vals = d_vals * (1.0 + growth_rates)
-                demand[(i, t, s)] = d_vals
+                cereal_path = cereal_path * (1.0 + growth_rates)
+                demand[(i, t, s)] = cereal_path.copy()
             else:
                 # 相对2023年[-5%,5%]不累积
                 shock = _lhs_sample(n, -0.05, 0.05, seed + i * 100 + t, distribution)
@@ -135,17 +149,17 @@ def generate_q2_marginals(data: ModelData, n: int = 1000,
     # ---- 成本生成 ----
     for (j, i, s) in sorted(data.suit.keys()):
         c_base = data.c.get((j, i, s), 0.0)
+        c_path = np.full(n, c_base)
         for t_idx, t in enumerate(years):
             growth = _lhs_sample(n, 0.04, 0.06, seed + j * 2000 + i * 100 + t, distribution)
-            c_vals = np.full(n, c_base)
-            for k in range(t_idx + 1):
-                c_vals = c_vals * (1.0 + growth)
-            cost[(j, i, t, s)] = c_vals
+            c_path = c_path * (1.0 + growth)
+            cost[(j, i, t, s)] = c_path.copy()
 
     # ---- 价格生成 ----
     for (i, s) in is_pairs:
         p_base = data.p.get((i, s), 0.0)
         group = _crop_price_group_q3(i)
+        p_path = np.full(n, p_base)
         for t_idx, t in enumerate(years):
             if group == "grain":
                 # 粮食价格：[-1%,1%]不累积
@@ -154,15 +168,13 @@ def generate_q2_marginals(data: ModelData, n: int = 1000,
             elif group == "vegetable":
                 # 蔬菜价格：年增长率[4%,6%]逐年递推
                 growth = _lhs_sample(n, 0.04, 0.06, seed + i * 300 + t, distribution)
-                p_vals = np.full(n, p_base)
-                for k in range(t_idx + 1):
-                    p_vals = p_vals * (1.0 + growth)
+                p_path = p_path * (1.0 + growth)
+                p_vals = p_path.copy()
             elif group == "mushroom":
                 # 食用菌价格：年下降率[1%,5%]逐年递推
                 decline = _lhs_sample(n, 0.01, 0.05, seed + i * 300 + t, distribution)
-                p_vals = np.full(n, p_base)
-                for k in range(t_idx + 1):
-                    p_vals = p_vals * (1.0 - decline)
+                p_path = p_path * (1.0 - decline)
+                p_vals = p_path.copy()
             elif group == "morel":
                 # 羊肚菌：固定年下降5%
                 p_vals = p_base * (0.95 ** (t_idx + 1))
@@ -170,7 +182,15 @@ def generate_q2_marginals(data: ModelData, n: int = 1000,
             else:
                 p_vals = np.full(n, p_base)
             price[(i, t, s)] = p_vals
-            trend_price[(i, t, s)] = np.full(n, p_base)  # Q2确定趋势基线
+            if group == "vegetable":
+                p_trend = p_base * 1.05 ** (t_idx + 1)
+            elif group == "mushroom":
+                p_trend = p_base * 0.97 ** (t_idx + 1)
+            elif group == "morel":
+                p_trend = p_base * 0.95 ** (t_idx + 1)
+            else:
+                p_trend = p_base
+            trend_price[(i, t, s)] = np.full(n, p_trend)
 
     return MarginalScenarioSet(
         demand=demand, yield_=yield_, cost=cost, price=price,
@@ -204,13 +224,7 @@ def correlate_marginals(marginals: MarginalScenarioSet,
       data: ModelData (用于构建因子映射)
       seed: 随机种子
     """
-    try:
-        from .dependency import (
-            DependencyConfig, build_factor_map, build_latent_correlation,
-            generate_t_rank_scores, reorder_lhs_by_ranks, BASE_LOADINGS,
-        )
-    except ImportError:
-        return marginals  # 降级：返回原始样本
+    from .dependency import DependencyConfig, reorder_lhs_by_ranks, BASE_LOADINGS
 
     if dependency_cfg is None:
         dependency_cfg = DependencyConfig(
@@ -225,31 +239,89 @@ def correlate_marginals(marginals: MarginalScenarioSet,
     if not crop_groups:
         return marginals
 
-    factor_maps = build_factor_map(crop_groups, dependency_cfg)
     years = data.years
+    groups = sorted(set(crop_groups.values()))
+    dim_for_dict = {
+        "demand": "base_demand_change", "yield_": "yield_change",
+        "cost": "cost_growth", "price": "price_change",
+    }
+    factors = ["macro", "global_climate"]
+    for group in groups:
+        factors.extend([f"{group}:category_demand",
+                        f"{group}:category_climate"])
+    rng = np.random.default_rng(seed)
+    nf, nt, n = len(factors), len(years), marginals.n
+    rho = float(dependency_cfg.temporal_rho)
+    g = np.empty((nf, nt, n), dtype=float)
+    g[:, 0, :] = rng.standard_normal((nf, n))
+    for ti in range(1, nt):
+        g[:, ti, :] = (rho * g[:, ti - 1, :]
+                       + np.sqrt(1.0 - rho * rho)
+                       * rng.standard_normal((nf, n)))
+    if np.isinf(dependency_cfg.df) or dependency_cfg.df > 1e6:
+        scale = np.ones(n)
+    else:
+        scale = np.sqrt(rng.chisquare(dependency_cfg.df, n)
+                        / dependency_cfg.df)
 
-    # 为每组生成t分数并重排边际样本
-    for group, fmap in factor_maps.items():
-        r_lat = build_latent_correlation(fmap, years)
-        scores = generate_t_rank_scores(marginals.n, fmap, years,
-                                         seed, dependency_cfg.df)
-        # scores shape: (N, n_dims * n_years)
-        # 对该组内所有作物的边际样本按秩重排
-        # 使用第一维分数重排该组内所有参数
-        score_col = 0  # 用第一个维度的分数
-        for key_dict in (marginals.demand, marginals.yield_,
-                         marginals.cost, marginals.price):
-            for key in list(key_dict.keys()):
-                if len(key) == 3:  # (i, t, s)
-                    i, t, s = key
-                elif len(key) == 4:  # (j, i, t, s)
-                    _, i, t, s = key
-                else:
-                    continue
-                if crop_groups.get(i) == group:
-                    vals = key_dict[key].copy()
-                    rank_order = np.argsort(scores[:, score_col])
-                    key_dict[key] = vals[np.argsort(rank_order)]
+    audit_scores, audit_coeffs, audit_years = [], [], []
+    for dict_name, key_dict in (("demand", marginals.demand),
+                                ("yield_", marginals.yield_),
+                                ("cost", marginals.cost),
+                                ("price", marginals.price)):
+        dim = dim_for_dict[dict_name]
+        for key in sorted(key_dict):
+            if len(key) == 3:
+                i, t, _ = key
+            else:
+                _, i, t, _ = key
+            group = crop_groups[i]
+            loads = dependency_cfg.loadings[dim]
+            coeff = np.zeros(nf)
+            coeff[factors.index("macro")] = loads["macro"]
+            coeff[factors.index("global_climate")] = loads["global_climate"]
+            coeff[factors.index(f"{group}:category_demand")] = loads["category_demand"]
+            coeff[factors.index(f"{group}:category_climate")] = loads["category_climate"]
+            coeff *= dependency_cfg.correlation_scale
+            row_sq = float(coeff @ coeff)
+            if row_sq >= 1.0 - 1e-12:
+                raise ValueError("联合相关载荷行平方和必须小于1")
+            ti = years.index(t)
+            # 每个实际随机边际拥有独立 epsilon；只共享因子与卡方尺度。
+            z = (coeff @ g[:, ti, :]
+                 + np.sqrt(1.0 - row_sq) * rng.standard_normal(n)) / scale
+            key_dict[key] = reorder_lhs_by_ranks(
+                key_dict[key].reshape(-1, 1), z.reshape(-1, 1)).ravel()
+            if len(audit_scores) < 24:
+                audit_scores.append(z)
+                audit_coeffs.append(coeff)
+                audit_years.append(ti)
+
+    # 真实样本 Kendall 审计，不得硬编码通过。
+    from scipy.stats import kendalltau
+    m = len(audit_scores)
+    target_r = np.eye(m)
+    max_err = 0.0
+    pair_count = 0
+    # 预先固定的不重叠审计对，避免根据样本结果挑选。
+    audit_pairs = [(a, a + 1) for a in range(0, m - 1, 2)]
+    for a in range(m):
+        for b in range(a + 1, m):
+            r_ab = float(audit_coeffs[a] @ audit_coeffs[b]) * rho ** abs(
+                audit_years[a] - audit_years[b])
+            target_r[a, b] = target_r[b, a] = r_ab
+    for a, b in audit_pairs:
+        r_ab = target_r[a, b]
+        tau_target = 2.0 / np.pi * np.arcsin(np.clip(r_ab, -1.0, 1.0))
+        tau_sample = float(kendalltau(audit_scores[a], audit_scores[b]).statistic)
+        max_err = max(max_err, abs(tau_sample - tau_target))
+        pair_count += 1
+    min_eig = float(np.linalg.eigvalsh(target_r).min()) if m else 1.0
+    marginals.dependency_audit = ScenarioDependencyAudit(
+        min_eigenvalue=min_eig, max_kendall_error=max_err,
+        pair_count=pair_count)
+    # 缩减特征仅保留公共因子，避免存储所有边际特异噪声。
+    marginals.factor_scores = (g / scale[None, None, :]).transpose(2, 0, 1).reshape(n, -1)
 
     return marginals
 
@@ -267,11 +339,10 @@ def apply_market_interactions(marginals: MarginalScenarioSet,
       elasticity_cfg: ElasticityConfig (可选，None则不修正)
     """
     if elasticity_cfg is not None:
-        try:
-            from .elasticity import build_elasticity_matrix, apply_price_elasticity
-            matrices = build_elasticity_matrix(data, elasticity_cfg.scale)
-        except (ImportError, Exception):
-            matrices = None
+        from .elasticity import (build_elasticity_matrix,
+                                 apply_price_elasticity,
+                                 build_crop_indices)
+        matrices = build_elasticity_matrix(data, config=elasticity_cfg)
     else:
         matrices = None
 
@@ -282,42 +353,25 @@ def apply_market_interactions(marginals: MarginalScenarioSet,
 
     # 应用弹性修正
     if matrices is not None:
-        is_pairs = sorted({(i, s) for (j, i, s) in data.suit.keys()})
-        crop_to_idx = {i: idx for idx, i in enumerate(sorted(
-            {i for (i, s) in is_pairs}))}
+        crop_indices_by_season = build_crop_indices(data)
         for s, matrix in matrices.items():
-            for (i, s2) in is_pairs:
-                if s2 != s:
-                    continue
-                for t in data.years:
-                    base = demand_base.get((i, t, s))
-                    scen_p = marginals.price.get((i, t, s))
-                    trend_p = marginals.trend_price.get((i, t, s))
-                    if base is None or scen_p is None or trend_p is None:
-                        continue
-                    idx = crop_to_idx.get(i)
-                    if idx is None or idx >= matrix.shape[0]:
-                        continue
-                    # 获取该季次所有作物价格
-                    crop_indices = {ci: ci_idx for ci, ci_idx in crop_to_idx.items()
-                                   if (ci, s) in is_pairs}
-                    p_ratio = np.ones((n, len(crop_indices)))
-                    for ci, ci_idx in crop_indices.items():
-                        sp = marginals.price.get((ci, t, s))
-                        tp = marginals.trend_price.get((ci, t, s))
-                        if sp is not None and tp is not None:
-                            p_ratio[:, ci_idx] = sp / np.maximum(tp, 1e-10)
-                    # 应用弹性
-                    modified = apply_price_elasticity(
-                        base.reshape(1, -1), p_ratio,
-                        trend_p[:1] if trend_p is not None else np.ones(1),
-                        matrices, crop_indices, s)
-                    demand[(i, t, s)] = modified.ravel()
+            crop_indices = crop_indices_by_season[s]
+            crops = [c for c, _ in sorted(crop_indices.items(), key=lambda z: z[1])]
+            for t in data.years:
+                base_mat = np.column_stack([demand_base[(i, t, s)] for i in crops])
+                price_mat = np.column_stack([marginals.price[(i, t, s)] for i in crops])
+                trend_mat = np.column_stack([marginals.trend_price[(i, t, s)] for i in crops])
+                modified = apply_price_elasticity(
+                    base_mat, price_mat, trend_mat, matrices, crop_indices, s)
+                for col, i in enumerate(crops):
+                    demand[(i, t, s)] = modified[:, col]
 
     return Q3ScenarioSet(
         weights=weights, demand=demand, demand_base=demand_base,
         yield_=marginals.yield_, cost=marginals.cost, price=marginals.price,
         trend_price=marginals.trend_price, n=n,
+        factor_scores=marginals.factor_scores,
+        dependency_audit=marginals.dependency_audit,
     )
 
 
