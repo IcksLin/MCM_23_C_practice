@@ -31,6 +31,9 @@ class SolveResult:
     time: float
     max_violation: float
     x: np.ndarray         # variable values
+    # solver status classification (区分4类状态)
+    has_incumbent: bool = False       # solver returned a valid x
+    solver_status: str = "unknown"   # optimal | feasible_not_proven | time_limit_no_feasible | infeasible
 
 
 def _solve_milp(model: StochModel, time_limit: float = 600.0,
@@ -78,6 +81,22 @@ def _solve_milp(model: StochModel, time_limit: float = 600.0,
         max_violation = max(violations)
     is_feasible = bool(raw_x is not None and np.all(np.isfinite(x))
                        and max_violation <= 1e-5)
+    has_incumbent = bool(raw_x is not None and np.all(np.isfinite(x)))
+
+    # classify solver status into 4 categories
+    # HiGHS status: 0=optimal, 1=time limit, 2=infeasible, 3=unbounded
+    if status == 0:
+        solver_status = "optimal"
+    elif status == 2:
+        solver_status = "infeasible"
+    elif status == 1:
+        # time limit reached: did we get an incumbent?
+        if has_incumbent:
+            solver_status = "feasible_not_proven"
+        else:
+            solver_status = "time_limit_no_feasible"
+    else:
+        solver_status = "unknown"
 
     # extract HiGHS internals (scipy.milp uses mip_dual_bound / mip_node_count)
     _dual_raw = getattr(res, "mip_dual_bound", None)
@@ -99,6 +118,7 @@ def _solve_milp(model: StochModel, time_limit: float = 600.0,
         is_feasible=is_feasible, status=status, message=message,
         fun=fun, dual_bound=dual_bound, mip_gap=mip_gap_val, nodes=nodes,
         time=time_s, max_violation=max_violation, x=x,
+        has_incumbent=has_incumbent, solver_status=solver_status,
     )
 
 

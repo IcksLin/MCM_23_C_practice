@@ -4,16 +4,25 @@ cd /d "%~dp0"
 chcp 65001 >nul
 set "PYTHONUTF8=1"
 
-set "PYTHON_EXE=python"
-where python >nul 2>&1
-if errorlevel 1 (
-    if exist "E:\anaconda\envs\yolov_env\python.exe" (
-        set "PYTHON_EXE=E:\anaconda\envs\yolov_env\python.exe"
-    ) else (
-        echo [ERROR] Python was not found. Activate the project environment first.
-        pause
-        exit /b 1
-    )
+set "PYTHON_EXE="
+python -c "import numpy,pandas,scipy,openpyxl,matplotlib" >nul 2>&1
+if not errorlevel 1 set "PYTHON_EXE=python"
+
+if not defined PYTHON_EXE if exist "E:\anaconda\python.exe" (
+    "E:\anaconda\python.exe" -c "import numpy,pandas,scipy,openpyxl,matplotlib" >nul 2>&1
+    if not errorlevel 1 set "PYTHON_EXE=E:\anaconda\python.exe"
+)
+
+if not defined PYTHON_EXE if exist "E:\anaconda\envs\yolov_env\python.exe" (
+    "E:\anaconda\envs\yolov_env\python.exe" -c "import numpy,pandas,scipy,openpyxl,matplotlib" >nul 2>&1
+    if not errorlevel 1 set "PYTHON_EXE=E:\anaconda\envs\yolov_env\python.exe"
+)
+
+if not defined PYTHON_EXE (
+    echo [ERROR] No Python interpreter with the required Q2 packages was found.
+    echo Required: numpy pandas scipy openpyxl matplotlib
+    pause
+    exit /b 1
 )
 
 echo ============================================================

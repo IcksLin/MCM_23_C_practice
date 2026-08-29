@@ -1,0 +1,8 @@
+# Planning-only dependency list. Pin exact versions after the P1 environment check.
+numpy
+pandas
+scipy
+highspy
+openpyxl
+matplotlib
+PyYAML

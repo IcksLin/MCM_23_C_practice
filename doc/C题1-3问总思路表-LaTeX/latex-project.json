@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "contest": "cumcm",
+  "main_tex": "main.tex",
+  "template": {
+    "path": "C:\\Users\\admin\\.codex\\skills\\math-modeling\\tools\\latex\\assets\\templates\\cumcm",
+    "source": null,
+    "version": null,
+    "sha256": "b58d44f4941ddffe4f19a0b78684d3e6015c2f72b8d5354fe2b2b685202b6186"
+  },
+  "template_files": {
+    "main.tex": "bcdcb449176640a60ff540210aa7b7a64d6a5e77465d5d06877bdb46d44de276",
+    "references.bib": "e19b906154ccbe9f86d9f9c550cda438357622483e23ceb0d1ba8900ca768a69"
+  },
+  "resource_bindings": [],
+  "created_at": "2026-08-29T05:46:45.154904+00:00"
+}

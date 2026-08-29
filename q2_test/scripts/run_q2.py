@@ -94,7 +94,7 @@ def _load_q1_baseline(data):
 
 
 def _generate_report(data, frontier, selected_lambda, evaluation,
-                     audit, solve_info, args):
+                      audit, solve_info, args):
     """生成文字报告。"""
     report_path = paths.DOC_DIR / "Q2_建模实现报告.md"
     report_path.parent.mkdir(parents=True, exist_ok=True)
@@ -140,12 +140,20 @@ def _generate_report(data, frontier, selected_lambda, evaluation,
                 f"{row.get('status', '?')} | {row.get('mip_gap', 0):.4f} |"
             )
 
+    nondominated = pareto_nondominated(
+        frontier[frontier.get("eligible", True)]) if frontier is not None else pd.DataFrame()
+    if len(nondominated) == 1:
+        selection_reason = "唯一非支配可用方案"
+    else:
+        selection_reason = "非支配风险前沿的确定性膝点规则"
+
     lines.extend([
         "",
         f"## 4. 唯一方案选择",
         "",
         f"- 选择 lambda = {selected_lambda}",
-        f"- 选择理由: 风险前沿膝点",
+        f"- 选择理由: {selection_reason}",
+        f"- 求解认证: {'通过' if audit.get('certified', False) else '未认证（保留可行解）'}",
         "",
         "## 5. 样本外评估",
         "",
@@ -174,6 +182,7 @@ def _generate_report(data, frontier, selected_lambda, evaluation,
         "## 7. 交付物清单",
         "",
         f"- 结果工作簿: outputs/q2/result2.xlsx",
+        f"- 可读种植方案: outputs/q2/selected_plan.csv",
         f"- 情景摘要: outputs/q2/scenario_summary.csv",
         f"- 风险前沿: outputs/q2/risk_frontier.csv",
         f"- 样本外利润: outputs/q2/out_of_sample_profits.csv",
@@ -188,7 +197,8 @@ def _generate_report(data, frontier, selected_lambda, evaluation,
         "```powershell",
         f"python scripts/run_q2.py --seed {args.seed} --raw-scenarios {args.raw_scenarios} "
         f"--reduced-scenarios {args.reduced_scenarios} --beta {args.beta} "
-        f"--out-sample {args.out_sample} --mip-gap {args.mip_gap} --time-limit {args.time_limit}",
+        f"--lambda-grid {args.lambda_grid} --out-sample {args.out_sample} "
+        f"--mip-gap {args.mip_gap} --time-limit {args.time_limit}",
         "```",
     ])
 
@@ -297,8 +307,11 @@ def main():
                 "expected_profit": e_pi,
                 "lower_tail_cvar": cvar,
                 "n_activations": sol["n_activations"],
-                "status": lex["result"].status,
+                "status": lex["result"].solver_status,
                 "mip_gap": lex["result"].mip_gap,
+                "stage1_gap": lex.get("result1", lex["result"]).mip_gap,
+                "stage2_gap": lex.get("result2").mip_gap if lex.get("result2") else float("nan"),
+                "stage3_gap": lex.get("result3").mip_gap if lex.get("result3") else float("nan"),
                 "dual_bound": lex["result"].dual_bound,
                 "solve_time": sum(res.time for res in stage_results),
                 "final_stage": lex.get("final_stage", 1),
@@ -315,8 +328,11 @@ def main():
                 "expected_profit": np.nan,
                 "lower_tail_cvar": np.nan,
                 "n_activations": 0,
-                "status": "infeasible",
+                "status": getattr(lex.get("result1", lex.get("result")), "solver_status", "unknown"),
                 "mip_gap": 1.0,
+                "stage1_gap": getattr(lex.get("result1"), "mip_gap", float("nan")) if lex.get("result1") else float("nan"),
+                "stage2_gap": float("nan"),
+                "stage3_gap": float("nan"),
                 "dual_bound": np.nan,
                 "solve_time": np.nan,
                 "final_stage": 0,
@@ -453,13 +469,16 @@ def main():
         "command": "python scripts/run_q2.py " + " ".join(sys.argv[1:]),
     }
     output_hashes = {}
-    for output in (paths.RESULT2_PATH, paths.SCENARIO_SUMMARY,
-                   paths.RISK_FRONTIER_CSV, paths.OUT_OF_SAMPLE_PROFITS,
-                   paths.OUT_OF_SAMPLE_METRICS, paths.AUDIT_PATH,
-                   paths.SELECTED_PLAN_CSV):
+    report_file = paths.DOC_DIR / "Q2_建模实现报告.md"
+    outputs_to_hash = [p for p in paths.Q2_OUT_DIR.rglob("*")
+                       if p.is_file() and p != paths.REPRO_PATH]
+    if report_file.exists():
+        outputs_to_hash.append(report_file)
+    for output in outputs_to_hash:
         if output.exists():
-            output_hashes[str(output.relative_to(paths.Q2_ROOT))] = hashlib.sha256(
-                output.read_bytes()).hexdigest()
+            key = (str(output.relative_to(paths.Q2_ROOT))
+                   if output.is_relative_to(paths.Q2_ROOT) else str(output))
+            output_hashes[key] = hashlib.sha256(output.read_bytes()).hexdigest()
     repro["output_sha256"] = output_hashes
     paths.REPRO_PATH.write_text(
         json.dumps(repro, indent=2, ensure_ascii=False), encoding="utf-8")

@@ -90,7 +90,17 @@ def _save(fig, name, output_dir, dpi):
     export_figure(fig, basename=str(output_dir / name),
                   formats=["svg", "png"], dpi=dpi,
                   size_inches=tuple(fig.get_size_inches()),
-                  grayscale_preview=True, tight=False)
+                  grayscale_preview=False, tight=False)
+    # Generate the audit-only preview from the publication PNG.  Keeping it
+    # under _qa prevents figure_audit.py from treating it as a new logical
+    # figure, and explicitly retained DPI metadata makes the preview portable.
+    from PIL import Image
+    png_path = output_dir / f"{name}.png"
+    qa_dir = output_dir / "_qa"
+    qa_dir.mkdir(parents=True, exist_ok=True)
+    gray_target = qa_dir / f"{name}_grayscale.png"
+    with Image.open(png_path) as preview:
+        preview.convert("L").save(gray_target, dpi=(dpi, dpi))
     import matplotlib.pyplot as plt
     plt.close(fig)
     return output_dir / f"{name}.png"
@@ -138,7 +148,7 @@ def _fig_lhs_marginal(scenarios, data, output_dir, dpi):
             shocks.extend(((arr - base) / base).tolist())
     axes[0].hist(shocks, bins=50, density=True, alpha=0.7, color="steelblue")
     axes[0].set_title("销量冲击分布")
-    axes[0].set_xlabel("(D-D₀)/D₀")
+    axes[0].set_xlabel("(D-D0)/D0")
     # yield shock
     shocks = []
     for key, arr in scenarios.yield_.items():
@@ -148,7 +158,7 @@ def _fig_lhs_marginal(scenarios, data, output_dir, dpi):
             shocks.extend(((arr - base) / base).tolist())
     axes[1].hist(shocks, bins=50, density=True, alpha=0.7, color="seagreen")
     axes[1].set_title("亩产冲击分布")
-    axes[1].set_xlabel("(q-q₀)/q₀")
+    axes[1].set_xlabel("(q-q0)/q0")
     # price shock
     shocks = []
     for key, arr in scenarios.price.items():
@@ -158,7 +168,7 @@ def _fig_lhs_marginal(scenarios, data, output_dir, dpi):
             shocks.extend(((arr - base) / base).tolist())
     axes[2].hist(shocks, bins=50, density=True, alpha=0.7, color="coral")
     axes[2].set_title("价格变化分布")
-    axes[2].set_xlabel("(p-p₀)/p₀")
+    axes[2].set_xlabel("(p-p0)/p0")
     fig.tight_layout()
     return _save(fig, "raw_q2_lhs_marginal", output_dir, dpi)
 
@@ -260,7 +270,9 @@ def _fig_area_heatmap(plan, data, output_dir, dpi):
     ax.set_xlabel("地块")
     ax.set_ylabel("年份")
     ax.set_title("最终年度种植面积热力图")
-    fig.colorbar(im, ax=ax, label="面积 (亩)")
+    colorbar = fig.colorbar(im, ax=ax, label="面积 (亩)")
+    if getattr(colorbar, "solids", None) is not None:
+        colorbar.solids.set_rasterized(False)
     return _save(fig, "result_q2_area_heatmap", output_dir, dpi)
 
 

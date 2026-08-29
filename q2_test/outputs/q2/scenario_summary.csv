@@ -1,2 +1,2 @@
 n_scenarios,seed,distribution,n_demand_params,n_yield_params,n_price_params
-500,2024,uniform,329,7434,413
+1000,2024,uniform,329,7434,413

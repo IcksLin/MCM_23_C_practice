@@ -57,8 +57,10 @@ def main() -> int:
     assert reduced.k == 3 and len(set(reduced.indices.tolist())) == 3
     assert np.isclose(reduced.weights.sum(), 1.0) and np.all(reduced.weights > 0)
 
+    # Give every lexicographic stage enough wall time to obtain an incumbent.
+    # Ten seconds was marginal on a busy Windows host and made this gate flaky.
     lex = solve_lexicographic(data, reduced, beta=0.90, risk_lambda=1.0,
-                              eta=0.5, time_limit=10, mip_gap=0.8,
+                              eta=0.5, time_limit=30, mip_gap=0.8,
                               eps_z=None, eps_e=None)
     assert lex.get("solution") is not None
     assert lex.get("lex_complete") and lex.get("final_stage") == 3

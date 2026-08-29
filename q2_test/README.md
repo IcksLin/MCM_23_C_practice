@@ -19,11 +19,11 @@ python -m pip install -r requirements.txt
 ## 手动运行
 
 ```powershell
-# 全量求解（高质量，约30—60分钟）
-python scripts/run_q2.py --seed 2024 --raw-scenarios 1000 --reduced-scenarios 30 --beta 0.90 --lambda-grid 0:1:0.1 --out-sample 5000 --mip-gap 0.01 --time-limit 600 --eta 0.5 --figures --reports --allow-uncertified
+# 正式求解（11个lambda各含三级MILP，实际耗时取决于CPU和gap）
+python scripts/run_q2.py --seed 2024 --raw-scenarios 1000 --reduced-scenarios 30 --beta 0.90 --lambda-grid 0:1:0.1 --out-sample 5000 --mip-gap 0.001 --time-limit 600 --eta 0.5 --figures --reports
 
-# 冒烟测试（快速验证，约8分钟）
-python scripts/run_q2.py --raw-scenarios 20 --reduced-scenarios 5 --out-sample 50 --time-limit 30 --mip-gap 0.05 --figures --reports
+# 完整流水线冒烟测试
+python scripts/pipeline_test.py
 
 # P1 门禁（最小纵向验证）
 python scripts/p1_test.py
@@ -38,7 +38,7 @@ python scripts/p1_test.py
 - `--out-sample N`：样本外评估情景数（默认 5000）。
 - `--eta`：最小种植面积比例。
 - `--mip-gap`、`--time-limit`：求解终止条件。
-- `--allow-uncertified`：允许 gap 未达标时保留解（用于长时求解的中间交付）。
+- `--allow-uncertified`：仅用于P1/冒烟测试。正式运行不使用；未达到认证门槛时程序以退出码2结束并明确标记候选解。
 
 ## 模型口径
 
@@ -74,28 +74,13 @@ python scripts/p1_test.py
 | `result2.xlsx` | 最终种植方案（2024—2030，7 个年份工作表），回填到 result2 模板 |
 | `risk_frontier.csv` | 风险前沿表：每个 lambda 的 Z_lambda、期望利润、CVaR、激活数、gap、求解时间、字典序阶段、认证状态 |
 | `scenario_summary.csv` | 情景摘要：原始情景数、种子、分布类型、各参数维度 |
-| `selected_plan.csv` | 选中方案的完整种植计划（地块/作物/年份/季次/面积/激活） |
-| `out_of_sample_profits.csv` | 样本外利润分布：每个样本外情景的利润值（用于直方图和风险分析） |
+| `selected_plan.csv` | 选中方案的非零种植计划（地块/作物/年份/季次/面积） |
+| `out_of_sample_profits.csv` | 选中方案、Q1基线和风险中性方案在同一随机流上的样本外利润 |
 | `out_of_sample_metrics.csv` | 样本外评估汇总：均值、标准差、分位数、最低利润、亏损概率、CVaR |
 | `audit_q2.csv` | 约束审计报告：面积/轮作/销售/利润/CVaR/整数等约束的违反量和可行判定 |
 | `repro_q2.json` | 可复现性清单：输入哈希、Python 版本、参数、求解统计、输出哈希 |
-| `figures/` | 9 张图表（PNG + SVG + 灰度预览），含风险前沿、利润分布、情景缩减、面积热力图等 |
+| `figures/` | 9 张图表（PNG + SVG），灰度预览位于 `figures/_qa/` |
 
-## 当前求解结果
+## 当前产物状态
 
-参数：500 原始情景 → 20 缩减情景，6 个 lambda（0—1），2000 样本外，mip_gap=0.05，time_limit=120s。
-
-| 指标 | 值 |
-|---|---|
-| 选中 lambda | 0.0（风险中性） |
-| 缩减情景内期望利润 | 22,569,941 元 |
-| 样本外均值利润 | 22,518,510 元 |
-| 10% 分位利润 | 22,368,548 元 |
-| 最差 10% 均值 (CVaR) | 22,313,679 元 |
-| 最低利润 | 22,156,309 元 |
-| 亏损概率 | 0.00% |
-| 约束审计 | 通过 |
-| LP 松弛理论最优 | 42,559,994 元 |
-| 与理论最优差距 | 46.97% |
-
-> 差距较大的原因：LP 松弛允许二元激活变量 y 取分数值，面积约束 x>=eta*A*y 和 x<=A*y 同时失效，导致 LP 上界远高于整数可行解。这是 MILP 的固有特征，不影响解的可行性。
+当前 `outputs/q2/` 是修复后的流水线冒烟产物（10个原始情景、1个代表情景、20个样本外情景、仅 `lambda=0`），用于证明读取、求解、审计、Excel回填和绘图能够贯通。它约束可行但未认证，**不是问题2正式最终答案**。正式结果必须由上述1000/30/5000唯一命令重新生成，并依据 `audit_q2.csv`、风险前沿完整性和求解认证状态决定能否用于问题3。

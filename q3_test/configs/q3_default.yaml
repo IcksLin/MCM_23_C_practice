@@ -1,0 +1,45 @@
+# Q3 默认配置 — AGENT.md section 3 冻结参数
+seed: 2024
+distribution: uniform
+raw_scenarios: 2000
+reduced_scenarios: 30
+out_sample: 5000
+beta: 0.90
+lambda_grid: [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+eta: 0.5
+
+# 因子 t-Copula 相关结构
+dependency:
+  df: 5                    # t分布自由度
+  correlation_scale: 1.0   # 载荷缩放系数 kappa_R
+  temporal_rho: 0.5        # AR(1) 时间自相关
+
+# 交叉价格弹性
+elasticity:
+  scale: 1.0               # 弹性缩放系数 kappa_E
+
+# 豆类前茬互补增益
+complementarity:
+  gamma: 0.03              # 增产率
+
+# 求解器
+solver:
+  mip_gap: 0.001
+  time_limit: 600
+  checkpoint: true
+
+# 消融实验组
+ablation:
+  groups:
+    - q2_baseline          # Q2冻结方案只复算
+    - correlation_only     # 仅加相关性
+    - elasticity_complementarity_only  # 仅加替代与互补
+    - full_q3              # 完整Q3
+
+# 弱中强参数扫描
+sensitivity:
+  kappa_R: [0.5, 1.0, 1.25]    # 相关缩放
+  rho_k: [0.25, 0.50, 0.75]    # 时间自相关
+  df: [5, 8, 50]                # t自由度 (50≈Gaussian)
+  kappa_E: [0.5, 1.0, 1.5]     # 弹性缩放
+  gamma: [0.0, 0.03, 0.06]     # 互补增益
