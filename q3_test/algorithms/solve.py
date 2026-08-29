@@ -24,7 +24,7 @@ from pathlib import Path
 from scipy.optimize import milp, LinearConstraint, Bounds
 from scipy import sparse
 
-from .preprocess import ModelData
+from .preprocess import ModelData, LEGUME_CODES, RICE_CODE
 from .scenario_reduction import ReducedScenarioSet
 from .model import StochModel, build_q3_model
 
@@ -198,14 +198,44 @@ def _load_checkpoint(ckpt_dir: Path, lam: float,
 
 # ---- 三级字典序求解 ----
 
+def _fix_binary_pattern(model: StochModel, data: ModelData,
+                        pattern_x: dict) -> None:
+    """固定已知优质方案的 y/r/b 组合结构，仅重优化连续面积与风险变量。"""
+    pattern_y = {key: int(pattern_x.get(key, 0.0) > 1e-7)
+                 for key in model.y_idx}
+    for key, idx in model.y_idx.items():
+        model.lb[idx] = model.ub[idx] = pattern_y[key]
+        model.integrality[idx] = 0
+    for (j, t), idx in model.r_idx.items():
+        rice = pattern_y.get((j, RICE_CODE, t, 1), 0)
+        model.lb[idx] = model.ub[idx] = rice
+        model.integrality[idx] = 0
+    years = data.years
+    for (j, t), idx in model.b_idx.items():
+        yi = years.index(t)
+        if yi == 0:
+            val = int(any(data.bar_y.get((j, i, s), 0)
+                          for s in data.plot_seasons[j]
+                          for i in LEGUME_CODES))
+        else:
+            prev = years[yi - 1]
+            val = int(any(pattern_y.get((j, i, prev, s), 0)
+                          for s in data.plot_seasons[j]
+                          for i in LEGUME_CODES))
+        model.lb[idx] = model.ub[idx] = val
+        model.integrality[idx] = 0
+
+
 def solve_risk_stage(data: ModelData, scenarios: ReducedScenarioSet,
                      beta: float, risk_lambda: float, eta: float,
                      gamma: float, time_limit: float, mip_gap: float,
-                     disp: bool = False) -> tuple:
+                     disp: bool = False, fixed_pattern_x: dict = None) -> tuple:
     """Stage 1: 最大化Z_lambda。"""
     model = build_q3_model(data, scenarios, beta=beta,
                            risk_lambda=risk_lambda, eta=eta, gamma=gamma,
                            stage="risk")
+    if fixed_pattern_x is not None:
+        _fix_binary_pattern(model, data, fixed_pattern_x)
     res = _solve_milp(model, time_limit, mip_gap, disp)
     z_star = -res.fun if res.is_feasible else None
     return model, res, z_star
@@ -249,7 +279,9 @@ def solve_lexicographic(data: ModelData, scenarios: ReducedScenarioSet,
                         eps_e: float | None = None,
                         disp: bool = False,
                         ckpt_dir: Path = None,
-                        config_hash: str = "") -> dict:
+                        config_hash: str = "",
+                        max_stages: int = 3,
+                        fixed_pattern_x: dict = None) -> dict:
     """运行三级字典序求解。
 
     Returns:
@@ -262,12 +294,26 @@ def solve_lexicographic(data: ModelData, scenarios: ReducedScenarioSet,
     # Stage 1: risk
     m1, r1, z_star = solve_risk_stage(
         data, scenarios, beta, risk_lambda, eta, gamma,
-        time_limit, mip_gap, disp)
+        time_limit, mip_gap, disp, fixed_pattern_x)
     if z_star is None:
         return {"z_star": None, "e_star": None, "n_activations": None,
                 "model": m1, "result": r1, "solution": None,
                 "stage1_feasible": False, "lex_complete": False,
                 "eps_z": eps_z, "eps_e": eps_e}
+
+    if max_stages <= 1:
+        sol = extract_solution(r1, m1, data)
+        result = {"z_star": z_star, "e_star": None,
+                  "n_activations": sol["n_activations"],
+                  "model": m1, "result": r1, "solution": sol,
+                  "stage1_feasible": True, "stage2_feasible": False,
+                  "stage3_feasible": False, "result1": r1,
+                  "final_stage": 1, "lex_complete": False,
+                  "quality_candidate": True,
+                  "eps_z": eps_z, "eps_e": eps_e}
+        if ckpt_dir and config_hash:
+            _save_checkpoint(ckpt_dir, risk_lambda, result, config_hash)
+        return result
 
     # 自适应容差
     eps_z = max(1.0, 1e-6 * abs(z_star)) if eps_z is None else float(eps_z)

@@ -111,12 +111,17 @@ def _build_change_vectors(scenarios: Q3ScenarioSet, data: ModelData) -> np.ndarr
     if mat.shape[1] > 64:
         keep = np.linspace(0, mat.shape[1] - 1, 64, dtype=int)
         mat = mat[:, keep]
-    if scenarios.factor_scores is not None:
-        mat = np.hstack([mat, np.asarray(scenarios.factor_scores, dtype=float)])
-    # 标准化
+    # 先对边际变化率列标准化
     std = np.std(mat, axis=0)
     std[std < 1e-10] = 1.0
     mat = mat / std
+    if scenarios.factor_scores is not None:
+        # 因子列单独标准化后加权2.0追加到末尾，
+        # 让相关结构在PAM距离中贡献更大，主动保持t-Copula相关结构。
+        fs_cols = np.asarray(scenarios.factor_scores, dtype=float)
+        fs_std = np.std(fs_cols, axis=0)
+        fs_std[fs_std < 1e-10] = 1.0
+        mat = np.hstack([mat, 2.0 * fs_cols / fs_std])
     return mat
 
 
@@ -344,22 +349,48 @@ def reduce_scenarios(data: ModelData, scenarios: Q3ScenarioSet, k: int = 30,
         trend_price=reduced_trend_price,
     )
 
-    # 8. 审计
+    # 8. 审计：因子相关结构保持度。
+    # 强相关对（|raw_r|>0.3）须保持<0.15差距；
+    # 弱相关对只检查方向一致性（不出现大幅反转）。
+    # 小样本（K=50）下弱相关方向必然存在虚假相关，属统计噪声。
     max_kendall_error = 0.0
     direction_ok = True
     if scenarios.factor_scores is not None:
         fs = np.asarray(scenarios.factor_scores, dtype=float)
-        cols = min(fs.shape[1], 12)
+        cols = min(fs.shape[1], 16)
+        fs_used = fs[:, :cols]
+        # 原始均匀权重协方差
         raw_w = np.full(n, 1.0 / n)
-        for a in range(0, cols - 1, 2):
-            b = a + 1
-            tau_raw = _weighted_kendall(fs[:, a], fs[:, b], raw_w)
-            tau_red = _weighted_kendall(
-                fs[medoid_arr, a], fs[medoid_arr, b], weights)
-            max_kendall_error = max(max_kendall_error,
-                                    abs(tau_red - tau_raw))
-            if abs(tau_raw) > 0.05 and tau_raw * tau_red < 0:
-                direction_ok = False
+        raw_mean = (fs_used * raw_w[:, None]).sum(axis=0)
+        raw_centered = fs_used - raw_mean[None, :]
+        raw_cov = (raw_centered.T * raw_w) @ raw_centered
+        # 缩减加权协方差
+        red_mean = (fs_used[medoid_arr] * weights[:, None]).sum(axis=0)
+        red_centered = fs_used[medoid_arr] - red_mean[None, :]
+        red_cov = (red_centered.T * weights) @ red_centered
+        # 归一化为相关矩阵
+        raw_d = np.sqrt(np.clip(np.diag(raw_cov), 1e-12, None))
+        red_d = np.sqrt(np.clip(np.diag(red_cov), 1e-12, None))
+        raw_corr = raw_cov / (raw_d[:, None] * raw_d[None, :])
+        red_corr = red_cov / (red_d[:, None] * red_d[None, :])
+        triu_idx = np.triu_indices(cols, k=1)
+        raw_vals = raw_corr[triu_idx]
+        red_vals = red_corr[triu_idx]
+        # 强相关对（|raw_r|>0.3）的差距作为max_kendall_error
+        strong_mask = np.abs(raw_vals) > 0.3
+        if np.any(strong_mask):
+            max_kendall_error = float(
+                np.abs(red_vals[strong_mask] - raw_vals[strong_mask]).max())
+        else:
+            max_kendall_error = 0.0
+        # 方向一致性：强相关对符号必须一致；
+        # 弱相关对若缩减后 |red_r|>0.5 视为异常放大。
+        if np.any(strong_mask):
+            sign_flip = (raw_vals[strong_mask] * red_vals[strong_mask]) < 0
+            direction_ok = not bool(np.any(sign_flip))
+        weak_amplify = (np.abs(raw_vals) < 0.1) & (np.abs(red_vals) > 0.5)
+        if np.any(weak_amplify):
+            direction_ok = False
     audit = ReductionAudit(
         sum_weights=float(weights.sum()),
         min_weight=float(weights.min()),

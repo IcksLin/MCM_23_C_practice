@@ -2,7 +2,7 @@
 seed: 2024
 distribution: uniform
 raw_scenarios: 2000
-reduced_scenarios: 30
+reduced_scenarios: 50
 out_sample: 5000
 beta: 0.90
 lambda_grid: [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
@@ -24,8 +24,8 @@ complementarity:
 
 # 求解器
 solver:
-  mip_gap: 0.001
-  time_limit: 600
+  mip_gap: 0.05
+  time_limit: 1800
   checkpoint: true
 
 # 消融实验组

@@ -22,6 +22,7 @@ import importlib.metadata
 import json
 import platform
 import time
+from pathlib import Path
 import numpy as np
 import pandas as pd
 
@@ -208,6 +209,8 @@ def _generate_report(data, frontier, selected_lambda, evaluation,
 
 def main():
     parser = argparse.ArgumentParser(description="2024 C题 问题2 求解主程序")
+    parser.add_argument("--config", type=str, default=None,
+                        help="YAML参数文件（命令行显式参数优先）")
     parser.add_argument("--seed", type=int, default=2024, help="随机种子 (默认2024)")
     parser.add_argument("--raw-scenarios", type=int, default=1000, help="原始情景数 (默认1000)")
     parser.add_argument("--reduced-scenarios", type=int, default=30, help="缩减情景数 (默认30)")
@@ -225,6 +228,22 @@ def main():
     parser.add_argument("--allow-uncertified", action="store_true",
                         help="仅供P1/冒烟测试：允许未认证可行解以退出码0结束")
     args = parser.parse_args()
+    if args.config:
+        import yaml
+        cfg = yaml.safe_load(Path(args.config).read_text(encoding="utf-8")) or {}
+        provided = set(sys.argv[1:])
+        mapping = {
+            "seed": "--seed", "raw_scenarios": "--raw-scenarios",
+            "reduced_scenarios": "--reduced-scenarios", "beta": "--beta",
+            "lambda_grid": "--lambda-grid", "out_sample": "--out-sample",
+            "mip_gap": "--mip-gap", "time_limit": "--time-limit",
+            "eta": "--eta", "figures": "--figures", "reports": "--reports",
+            "distribution": "--distribution",
+            "allow_uncertified": "--allow-uncertified",
+        }
+        for key, flag in mapping.items():
+            if key in cfg and flag not in provided:
+                setattr(args, key, cfg[key])
 
     paths.ensure_dirs()
     start_time = time.time()

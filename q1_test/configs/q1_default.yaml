@@ -1,0 +1,11 @@
+# Q1 集中调参文件
+scenario: both
+eta: 0.5
+delta: 0.001
+demand_scale: 1.0
+mip_gap: 0.001
+time_limit: 600.0
+seed: 2024
+sensitivity: false
+figures: true
+reports: true

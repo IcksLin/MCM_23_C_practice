@@ -1,0 +1,2 @@
+﻿lambda,z_lambda,expected_profit,cvar,n_activations,solver_status,status,mip_gap,lex_complete
+0.5,32310872.795191847,32329086.737544745,32292658.852838963,627,feasible_not_proven,feasible_not_proven,0.314722066461849,False

@@ -1,0 +1,27 @@
+# Q3 优质候选解实验：优先获得多个可行 incumbent，不声称最优认证。
+seed: 2024
+distribution: uniform
+raw_scenarios: 1000
+reduced_scenarios: 10
+out_sample: 1000
+beta: 0.90
+lambda_grid: [0.0, 0.5, 1.0]
+eta: 0.5
+
+dependency:
+  df: 5
+  correlation_scale: 1.0
+  temporal_rho: 0.5
+
+elasticity:
+  scale: 1.0
+
+complementarity:
+  gamma: 0.03
+
+solver:
+  max_stages: 1
+  fixed_q2_pattern: true
+  mip_gap: 0.10
+  time_limit: 90
+  checkpoint: true

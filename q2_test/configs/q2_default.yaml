@@ -1,0 +1,14 @@
+# Q2 集中调参文件
+seed: 2024
+distribution: uniform
+raw_scenarios: 1000
+reduced_scenarios: 30
+out_sample: 5000
+beta: 0.90
+lambda_grid: "0:1:0.1"
+eta: 0.5
+mip_gap: 0.001
+time_limit: 600.0
+figures: true
+reports: true
+allow_uncertified: false

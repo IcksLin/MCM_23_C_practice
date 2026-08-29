@@ -612,6 +612,8 @@ def write_repro(md, raw, res1, res2, args, generated, t0, t1):
 
 def main():
     parser = argparse.ArgumentParser(description="2024 C题 问题1 求解主程序")
+    parser.add_argument("--config", type=str, default=None,
+                        help="YAML参数文件（命令行显式参数优先）")
     parser.add_argument("--scenario", choices=["both", "1", "2"], default="both")
     parser.add_argument("--eta", type=float, default=0.5,
                         help="最小种植面积比例 (默认0.5)")
@@ -625,6 +627,20 @@ def main():
     parser.add_argument("--figures", action="store_true")
     parser.add_argument("--reports", action="store_true")
     args = parser.parse_args()
+    if args.config:
+        import yaml
+        cfg = yaml.safe_load(Path(args.config).read_text(encoding="utf-8")) or {}
+        provided = set(sys.argv[1:])
+        mapping = {
+            "scenario": "--scenario", "eta": "--eta", "delta": "--delta",
+            "demand_scale": "--demand-scale", "mip_gap": "--mip-gap",
+            "time_limit": "--time-limit", "seed": "--seed",
+            "sensitivity": "--sensitivity", "figures": "--figures",
+            "reports": "--reports",
+        }
+        for key, flag in mapping.items():
+            if key in cfg and flag not in provided:
+                setattr(args, key, cfg[key])
 
     t0 = time.time()
     generated = []
