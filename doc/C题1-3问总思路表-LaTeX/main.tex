@@ -4,6 +4,7 @@
 \usepackage[a4paper,landscape,left=1.4cm,right=1.4cm,top=1.5cm,bottom=1.5cm]{geometry}
 \usepackage[hidelinks]{hyperref}
 \usepackage{fancyhdr}
+\newcommand{\keywords}[1]{\par\noindent\textbf{关键词：}#1}
 \setlength{\headheight}{14pt}
 \setlength{\parindent}{2em}
 \setlength{\parskip}{0.25em}
@@ -22,6 +23,10 @@
 \author{}
 \date{}
 \maketitle
+\begin{abstract}
+本文将农作物种植策略问题一至问题三的数据处理、数学模型、求解流程、验证方法、现有结果及证据边界汇总为统一思路表，供后续工程实现与论文写作核对使用。
+\keywords{农作物种植；混合整数线性规划；情景分析；CVaR；t-Copula}
+\end{abstract}
 
 \begin{quote}\small
 用途：作为论文写作底稿，记录问题 1—3 最终采用的数据处理、模型、求解、验证和结论口径。数值结果只引用当前工程中的真实运行记录；问题 3 尚未编程求解，不填写虚构结果。
@@ -29,7 +34,9 @@
 
 \section{一、总体路线}
 
+\noindent 本节汇总见表~\ref{tab:thought-1}。
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.20\linewidth}>{\raggedright\arraybackslash}p{0.36\linewidth}>{\raggedright\arraybackslash}p{0.38\linewidth}@{}}
+\caption{思路表第 1 表}\label{tab:thought-1}\\
 \toprule
 \textbf{阶段} & \textbf{核心任务} & \textbf{当前状态} \\
 \midrule
@@ -50,7 +57,9 @@
 
 \section{二、数据清洗}
 
+\noindent 本节汇总见表~\ref{tab:thought-2}。
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.05\linewidth}>{\raggedright\arraybackslash}p{0.15\linewidth}>{\raggedright\arraybackslash}p{0.27\linewidth}>{\raggedright\arraybackslash}p{0.16\linewidth}>{\raggedright\arraybackslash}p{0.25\linewidth}>{\raggedright\arraybackslash}p{0.08\linewidth}@{}}
+\caption{思路表第 2 表}\label{tab:thought-2}\\
 \toprule
 \textbf{编号} & \textbf{数据问题} & \textbf{当前处理方案} & \textbf{处理对象/阶段} & \textbf{处理理由} & \textbf{状态} \\
 \midrule
@@ -80,7 +89,9 @@
 D_{is}^{2023}=\sum_j q_{jis}^{2023}\bar x_{jis}^{2023}.
 \]
 
+\noindent 本节汇总见表~\ref{tab:thought-3}。
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.26\linewidth}>{\raggedright\arraybackslash}p{0.68\linewidth}@{}}
+\caption{思路表第 3 表}\label{tab:thought-3}\\
 \toprule
 \textbf{口径} & \textbf{处理方式} \\
 \midrule
@@ -100,7 +111,9 @@ D_{is}^{2023}=\sum_j q_{jis}^{2023}\bar x_{jis}^{2023}.
 
 \subsection{规则 DC-02：销售价格与滞销处理}
 
+\noindent 本节汇总见表~\ref{tab:thought-4}。
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.17\linewidth}>{\raggedright\arraybackslash}p{0.27\linewidth}>{\raggedright\arraybackslash}p{0.27\linewidth}>{\raggedright\arraybackslash}p{0.23\linewidth}@{}}
+\caption{思路表第 4 表}\label{tab:thought-4}\\
 \toprule
 \textbf{情形} & \textbf{正常销售量} & \textbf{超产部分} & \textbf{收益口径} \\
 \midrule
@@ -121,7 +134,9 @@ D_{is}^{2023}=\sum_j q_{jis}^{2023}\bar x_{jis}^{2023}.
 
 \subsection{规则 DC-03：地块与季次结构}
 
+\noindent 本节汇总见表~\ref{tab:thought-5}。
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.17\linewidth}>{\raggedright\arraybackslash}p{0.27\linewidth}>{\raggedright\arraybackslash}p{0.27\linewidth}>{\raggedright\arraybackslash}p{0.23\linewidth}@{}}
+\caption{思路表第 5 表}\label{tab:thought-5}\\
 \toprule
 \textbf{地块类型} & \textbf{数量} & \textbf{面积合计} & \textbf{允许结构} \\
 \midrule
@@ -143,7 +158,9 @@ D_{is}^{2023}=\sum_j q_{jis}^{2023}\bar x_{jis}^{2023}.
 
 \subsection{规则 DC-04：轮作与管理约束}
 
+\noindent 本节汇总见表~\ref{tab:thought-6}。
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.26\linewidth}>{\raggedright\arraybackslash}p{0.68\linewidth}@{}}
+\caption{思路表第 6 表}\label{tab:thought-6}\\
 \toprule
 \textbf{规则} & \textbf{数学处理} \\
 \midrule
@@ -164,7 +181,9 @@ D_{is}^{2023}=\sum_j q_{jis}^{2023}\bar x_{jis}^{2023}.
 
 \subsection{规则 DC-05：随机参数身份}
 
+\noindent 本节汇总见表~\ref{tab:thought-7}。
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.20\linewidth}>{\raggedright\arraybackslash}p{0.36\linewidth}>{\raggedright\arraybackslash}p{0.38\linewidth}@{}}
+\caption{思路表第 7 表}\label{tab:thought-7}\\
 \toprule
 \textbf{参数} & \textbf{题面区间或趋势} & \textbf{模型处理} \\
 \midrule
@@ -190,7 +209,9 @@ D_{is}^{2023}=\sum_j q_{jis}^{2023}\bar x_{jis}^{2023}.
 
 \subsection{1. 数据特征分析}
 
+\noindent 本节汇总见表~\ref{tab:thought-8}。
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.20\linewidth}>{\raggedright\arraybackslash}p{0.36\linewidth}>{\raggedright\arraybackslash}p{0.38\linewidth}@{}}
+\caption{思路表第 8 表}\label{tab:thought-8}\\
 \toprule
 \textbf{项目} & \textbf{数据特征} & \textbf{对建模的影响} \\
 \midrule
@@ -212,7 +233,9 @@ D_{is}^{2023}=\sum_j q_{jis}^{2023}\bar x_{jis}^{2023}.
 
 \subsection{2. 数据预处理方案}
 
+\noindent 本节汇总见表~\ref{tab:thought-9}。
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.20\linewidth}>{\raggedright\arraybackslash}p{0.36\linewidth}>{\raggedright\arraybackslash}p{0.38\linewidth}@{}}
+\caption{思路表第 9 表}\label{tab:thought-9}\\
 \toprule
 \textbf{处理步骤} & \textbf{具体做法} & \textbf{目的} \\
 \midrule
@@ -263,7 +286,9 @@ Q_{its}=\sum_j q_{jis}x_{jits},\qquad
 -\sum_{j,i,t,s}c_{jis}x_{jits}.
 \]
 
+\noindent 本节汇总见表~\ref{tab:thought-10}。
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.20\linewidth}>{\raggedright\arraybackslash}p{0.36\linewidth}>{\raggedright\arraybackslash}p{0.38\linewidth}@{}}
+\caption{思路表第 10 表}\label{tab:thought-10}\\
 \toprule
 \textbf{参数/变量} & \textbf{含义} & \textbf{单位} \\
 \midrule
@@ -299,7 +324,9 @@ Q_{its}=\sum_j q_{jis}x_{jits},\qquad
 
 \subsection{6. 模型评分方式}
 
+\noindent 本节汇总见表~\ref{tab:thought-11}。
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.20\linewidth}>{\raggedright\arraybackslash}p{0.36\linewidth}>{\raggedright\arraybackslash}p{0.38\linewidth}@{}}
+\caption{思路表第 11 表}\label{tab:thought-11}\\
 \toprule
 \textbf{评价方法} & \textbf{作用} & \textbf{判定方式} \\
 \midrule
@@ -322,7 +349,9 @@ Excel 回读 & 检查导出正确性 & 模板回读方案与内存方案一致 \
 
 当前自动报告保留的正式求解快照为：
 
+\noindent 本节汇总见表~\ref{tab:thought-12}。
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.05\linewidth}>{\raggedright\arraybackslash}p{0.15\linewidth}>{\raggedright\arraybackslash}p{0.27\linewidth}>{\raggedright\arraybackslash}p{0.16\linewidth}>{\raggedright\arraybackslash}p{0.25\linewidth}>{\raggedright\arraybackslash}p{0.08\linewidth}@{}}
+\caption{思路表第 12 表}\label{tab:thought-12}\\
 \toprule
 \textbf{情形} & \textbf{七年利润 incumbent} & \textbf{利润上界} & \textbf{MIP gap} & \textbf{农业约束可行} & \textbf{最优性认证} \\
 \midrule
@@ -359,7 +388,9 @@ Excel 回读 & 检查导出正确性 & 模板回读方案与内存方案一致 \
 
 本部分只描述数据现象如何影响“不确定条件下给出最优种植方案”这一目标。
 
+\noindent 本节汇总见表~\ref{tab:thought-13}。
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.26\linewidth}>{\raggedright\arraybackslash}p{0.68\linewidth}@{}}
+\caption{思路表第 13 表}\label{tab:thought-13}\\
 \toprule
 \textbf{数据现象} & \textbf{对问题 2 的影响} \\
 \midrule
@@ -379,7 +410,9 @@ Excel 回读 & 检查导出正确性 & 模板回读方案与内存方案一致 \
 
 \subsection{2. 问题分析}
 
+\noindent 本节汇总见表~\ref{tab:thought-14}。
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.26\linewidth}>{\raggedright\arraybackslash}p{0.68\linewidth}@{}}
+\caption{思路表第 14 表}\label{tab:thought-14}\\
 \toprule
 \textbf{大类问题} & \textbf{需要回答的具体内容} \\
 \midrule
@@ -406,7 +439,9 @@ Excel 回读 & 检查导出正确性 & 模板回读方案与内存方案一致 \
 
 \subsubsection{3.2 新增定义}
 
+\noindent 本节汇总见表~\ref{tab:thought-15}。
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.20\linewidth}>{\raggedright\arraybackslash}p{0.36\linewidth}>{\raggedright\arraybackslash}p{0.38\linewidth}@{}}
+\caption{思路表第 15 表}\label{tab:thought-15}\\
 \toprule
 \textbf{指标} & \textbf{定义} & \textbf{作用} \\
 \midrule
@@ -443,7 +478,9 @@ Excel 回读 & 检查导出正确性 & 模板回读方案与内存方案一致 \
 
 \subsection{4. 模型与算法组件及选取缘由}
 
+\noindent 本节汇总见表~\ref{tab:thought-16}。
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.17\linewidth}>{\raggedright\arraybackslash}p{0.27\linewidth}>{\raggedright\arraybackslash}p{0.27\linewidth}>{\raggedright\arraybackslash}p{0.23\linewidth}@{}}
+\caption{思路表第 16 表}\label{tab:thought-16}\\
 \toprule
 \textbf{模型或算法} & \textbf{是什么} & \textbf{选取缘由} & \textbf{解决的问题} \\
 \midrule
@@ -510,7 +547,9 @@ Latin Hypercube Sampling & 每一维在 \texttt{[0,1]} 等概率分层后映射�
 
 \subsection{8. 结论对比}
 
+\noindent 本节汇总见表~\ref{tab:thought-17}。
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.05\linewidth}>{\raggedright\arraybackslash}p{0.15\linewidth}>{\raggedright\arraybackslash}p{0.27\linewidth}>{\raggedright\arraybackslash}p{0.16\linewidth}>{\raggedright\arraybackslash}p{0.25\linewidth}>{\raggedright\arraybackslash}p{0.08\linewidth}@{}}
+\caption{思路表第 17 表}\label{tab:thought-17}\\
 \toprule
 \textbf{方案/权重点} & \textbf{期望利润} & \textbf{下尾 CVaR} & \textbf{激活数} & \textbf{状态} & \textbf{MIP gap} \\
 \midrule
@@ -531,7 +570,9 @@ Latin Hypercube Sampling & 每一维在 \texttt{[0,1]} 等概率分层后映射�
 
 选中方案的 5000 个样本外情景结果为：
 
+\noindent 本节汇总见表~\ref{tab:thought-18}。
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.26\linewidth}>{\raggedright\arraybackslash}p{0.68\linewidth}@{}}
+\caption{思路表第 18 表}\label{tab:thought-18}\\
 \toprule
 \textbf{指标} & \textbf{数值} \\
 \midrule
@@ -564,7 +605,9 @@ Latin Hypercube Sampling & 每一维在 \texttt{[0,1]} 等概率分层后映射�
 
 \subsection{1. 数据特征分析}
 
+\noindent 本节汇总见表~\ref{tab:thought-19}。
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.26\linewidth}>{\raggedright\arraybackslash}p{0.68\linewidth}@{}}
+\caption{思路表第 19 表}\label{tab:thought-19}\\
 \toprule
 \textbf{数据特征} & \textbf{对问题 3 的影响} \\
 \midrule
@@ -584,7 +627,9 @@ Q2 基线未认证 & 比较时只能把它作为固定可行候选，不得称�
 
 \subsection{2. 问题分析}
 
+\noindent 本节汇总见表~\ref{tab:thought-20}。
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.26\linewidth}>{\raggedright\arraybackslash}p{0.68\linewidth}@{}}
+\caption{思路表第 20 表}\label{tab:thought-20}\\
 \toprule
 \textbf{大类问题} & \textbf{具体任务} \\
 \midrule
@@ -611,7 +656,9 @@ Q2 基线未认证 & 比较时只能把它作为固定可行候选，不得称�
 
 \subsubsection{3.2 新增定义}
 
+\noindent 本节汇总见表~\ref{tab:thought-21}。
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.20\linewidth}>{\raggedright\arraybackslash}p{0.36\linewidth}>{\raggedright\arraybackslash}p{0.38\linewidth}@{}}
+\caption{思路表第 21 表}\label{tab:thought-21}\\
 \toprule
 \textbf{指标} & \textbf{定义} & \textbf{作用} \\
 \midrule
@@ -652,7 +699,9 @@ Q_{its}^{\omega}=\sum_jq_{jits}^{\omega}
 
 \subsection{4. 模型与算法组件及选取缘由}
 
+\noindent 本节汇总见表~\ref{tab:thought-22}。
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.17\linewidth}>{\raggedright\arraybackslash}p{0.27\linewidth}>{\raggedright\arraybackslash}p{0.27\linewidth}>{\raggedright\arraybackslash}p{0.23\linewidth}@{}}
+\caption{思路表第 22 表}\label{tab:thought-22}\\
 \toprule
 \textbf{模型或算法} & \textbf{是什么} & \textbf{选取缘由} & \textbf{解决的问题} \\
 \midrule
@@ -726,7 +775,9 @@ g_{k,t}=\rho_kg_{k,t-1}+\sqrt{1-\rho_k^2}\nu_{k,t}
 
 \subsection{8. 结论对比}
 
+\noindent 本节汇总见表~\ref{tab:thought-23}。
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.12\linewidth}>{\raggedright\arraybackslash}p{0.20\linewidth}>{\raggedright\arraybackslash}p{0.24\linewidth}>{\raggedright\arraybackslash}p{0.24\linewidth}>{\raggedright\arraybackslash}p{0.14\linewidth}@{}}
+\caption{思路表第 23 表}\label{tab:thought-23}\\
 \toprule
 \textbf{比较组} & \textbf{相关性} & \textbf{替代/互补} & \textbf{是否重新优化} & \textbf{当前结果状态} \\
 \midrule
@@ -748,7 +799,9 @@ Q2 可行候选基线 & 独立边际生成 & 无 & 否，只在 Q3 情景中复�
 
 问题 3 当前只完成建模方案、工程结构和编程手实现合同，尚未完成 Python 求解链、正式风险前沿、样本外比较和结果工作簿。因此：
 
+\noindent 本节汇总见表~\ref{tab:thought-24}。
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.26\linewidth}>{\raggedright\arraybackslash}p{0.68\linewidth}@{}}
+\caption{思路表第 24 表}\label{tab:thought-24}\\
 \toprule
 \textbf{交付项} & \textbf{当前状态} \\
 \midrule
@@ -810,7 +863,9 @@ Q2/Q3 消融和成对比较 & 未执行 \\
 
 \subsection{4. 三问统一完成门槛}
 
+\noindent 本节汇总见表~\ref{tab:thought-25}。
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.17\linewidth}>{\raggedright\arraybackslash}p{0.27\linewidth}>{\raggedright\arraybackslash}p{0.27\linewidth}>{\raggedright\arraybackslash}p{0.23\linewidth}@{}}
+\caption{思路表第 25 表}\label{tab:thought-25}\\
 \toprule
 \textbf{门槛} & \textbf{问题 1} & \textbf{问题 2} & \textbf{问题 3} \\
 \midrule

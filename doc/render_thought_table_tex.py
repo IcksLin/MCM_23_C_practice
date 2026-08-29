@@ -119,6 +119,7 @@ def render_table(rows: list[list[str]], table_number: int) -> list[str]:
     body = rows[2:]
     spec = column_spec(len(header))
     output = [
+        rf"\noindent 本节汇总见表~\ref{{tab:thought-{table_number}}}。",
         r"\begin{longtable}{" + spec + "}",
         rf"\caption{{思路表第 {table_number} 表}}\label{{tab:thought-{table_number}}}\\",
         r"\toprule",

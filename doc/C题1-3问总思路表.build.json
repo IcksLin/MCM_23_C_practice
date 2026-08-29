@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
-  "created_at": "2026-08-29T05:50:01.343755+00:00",
+  "created_at": "2026-08-29T05:51:24.847574+00:00",
   "passed": true,
   "main_tex": "main.tex",
   "project_root": "D:\\时光归墟\\赛事\\数模\\practice_1\\doc\\C题1-3问总思路表-LaTeX",
-  "source_sha256": "9b1c31acbe6c05ac7204a6c52e500a28eeffb18d70d909a0b73051fed42b428e",
-  "compiled_source_sha256": "9b1c31acbe6c05ac7204a6c52e500a28eeffb18d70d909a0b73051fed42b428e",
-  "post_build_source_sha256": "9b1c31acbe6c05ac7204a6c52e500a28eeffb18d70d909a0b73051fed42b428e",
-  "pdf_sha256": "0675934f4abc4dd731f95b12e868fd589bfb96a540f169a192e3b2998151b970",
+  "source_sha256": "757ad6bdaae7841544753b1fa6993218234bfd5f1909fcd09b8c284a737a8cb4",
+  "compiled_source_sha256": "757ad6bdaae7841544753b1fa6993218234bfd5f1909fcd09b8c284a737a8cb4",
+  "post_build_source_sha256": "757ad6bdaae7841544753b1fa6993218234bfd5f1909fcd09b8c284a737a8cb4",
+  "pdf_sha256": "cb691bec1bf06d80f75b68546ae4691a66765bbeebfccb89377408f524036fb6",
   "project_manifest_sha256": "ab8fe362318400a7267c00f59972018938994814a7183a6d07cd4b85372aa929",
   "engine": "xelatex",
   "tools": {
@@ -37,7 +37,7 @@
       ],
       "cwd": "D:\\时光归墟\\赛事\\数模\\practice_1\\doc\\C题1-3问总思路表-LaTeX",
       "returncode": 0,
-      "duration_seconds": 9.742
+      "duration_seconds": 9.51
     }
   ],
   "warnings": [],
@@ -47,5 +47,5 @@
     "reason": null
   },
   "issues": [],
-  "reproduce": "C:\\Users\\admin\\AppData\\Local\\Programs\\Python\\Python314\\python.exe C:\\Users\\admin\\.codex\\skills\\math-modeling\\tools\\latex\\scripts\\latex_paper.py build D:\\时光归墟\\赛事\\数模\\practice_1\\doc\\C题1-3问总思路表-LaTeX\\main.tex --engine xelatex --timeout 180 --publish D:\\时光归墟\\赛事\\数模\\practice_1\\doc\\C题1-3问总思路表.pdf"
+  "reproduce": "C:\\Users\\admin\\AppData\\Local\\Programs\\Python\\Python314\\python.exe C:\\Users\\admin\\.codex\\skills\\math-modeling\\tools\\latex\\scripts\\latex_paper.py build D:\\时光归墟\\赛事\\数模\\practice_1\\doc\\C题1-3问总思路表-LaTeX\\main.tex --engine xelatex --timeout 180 --publish D:\\时光归墟\\赛事\\数模\\practice_1\\doc\\C题1-3问总思路表.pdf --overwrite"
 }
